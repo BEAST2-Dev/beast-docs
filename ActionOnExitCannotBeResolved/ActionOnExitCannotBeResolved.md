@@ -1,6 +1,6 @@
 # Errors after putting BEAST2 into a Java project
 
-[This tutorial](../CreateNewTreePrior/CreateNewTreePrior.md), sectyion `Put BEAST2 into a Java project` shows how to put
+[This tutorial](../CreateNewTreePrior/CreateNewTreePrior.md), section `Put BEAST2 into a Java project` shows how to put
 BEAST2 into a Java project. This does not always work out well.
 
 Ideally, you'd see this:
