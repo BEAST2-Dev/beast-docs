@@ -49,6 +49,8 @@ Now, the Eclipse Package Explorer shows the project `beast2`. Well done!
 
 ![Eclipse with BEAST2 in the package explorer](EclipsePackageExplorerWithBeast2.png)
 
+If you get many red error indicators, go to [this tutorial](../ActionOnExitCannotBeResolved/ActionOnExitCannotBeResolved.md)
+
 ## Creating your own project
 
 Now you need to create an Eclipse project for your package and make it depend on the `beast2` project.
