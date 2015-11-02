@@ -1,0 +1,149 @@
+\documentclass{article}
+
+\setcounter{page}{1}
+\setlength{\oddsidemargin}{0.in}
+\setlength{\evensidemargin}{0.in}
+\setlength{\textwidth}{6.5in}
+\setlength{\topmargin}{-0.5in}
+\setlength{\headheight}{0.17in}
+\setlength{\headsep}{0.35in}
+\setlength{\textheight}{9.in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{.1in}
+\usepackage[T1]{fontenc}
+\usepackage[round]{natbib}
+\bibliographystyle{../../bst/sysbio}
+\usepackage[fleqn]{amsmath}
+\usepackage{amssymb}
+\usepackage{xspace}
+\usepackage{verbatim}
+\usepackage{paralist}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{backref, urlcolor=blue, linkcolor=blue, citecolor=blue,  colorlinks=true}
+
+% use the fancyhdr package to allow both headers and footers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{} % clear all headers and footers
+\fancyhead[RO,LE]{Species Delimitation in a SNAPP Tutorial}
+% \fancyhead[RO,LE]{2012}
+\fancyfoot[LO,LE]{\footnotesize 2015 Adelaide, Australia.}
+\fancyfoot[CE,CO]{}
+\fancyfoot[RO,RE]{\thepage}
+\renewcommand{\footrulewidth}{0.5pt}
+
+% \floatstyle{boxed}
+% \restylefloat{figure}
+% \restylefloat{table}
+\newfloat{textbox}{hptb}{lotb}
+\floatname{textbox}{Box}
+
+\newcommand{\execmd}[1]{\texttt{#1}\\}
+\newcommand{\cmdopt}[1]{\texttt{#1}\xspace}
+\newcommand{\cmd}[1]{\texttt{#1}\xspace}
+\newcommand{\localfile}[1]{\textsf{#1}\xspace}
+\newcommand{\QandA}[2]{\textit{#1}\footnote{#2}\xspace}
+\newcommand{\todo}[1]{{\color{red}TODO: {#1}}\xspace}
+\newcommand{\menutab}[1]{\textbf{\textit{#1}}\xspace}
+\newcommand{\subItem}[2]{\menutab{#1}$\rightarrow$\menutab{#2}\xspace}
+\newcommand{\subsubItem}[3]{\menutab{#1}$\rightarrow$\menutab{#2}$\rightarrow$\menutab{#3}\xspace}
+\newcommand{\program}[1]{#1\xspace}
+\newcommand{\plusbutton}{``$\boldsymbol{+}$''\xspace}
+\newcommand{\beast}{\href{http://beast2.org}{\program{BEAST}}\xspace}
+\newcommand{\taxonset}[1]{{\bfseries\sffamily #1}\xspace}
+\newcommand{\field}[1]{\texttt{#1}\xspace}
+\newcommand{\fieldvalue}[1]{{\bfseries\sffamily #1}\xspace}
+\newcommand{\questionfont}[1]{{\bfseries\sffamily\textit{#1}}\xspace}
+\newcommand{\question}[1]{{\questionfont{#1}\\\vspace{2cm}}\xspace}
+
+
+\begin{document}
+{\Large\bf Bayes Factor Delimitation of Species (*with genomic data; BFD*):\\
+A Tutorial and Worked Example}\\
+\\
+Adam Leach\'e\\
+Department of Biology\\
+University of Washington\\
+April 2015
+{\singlespacing \tableofcontents}
+\newpage
+%###########################################################################################
+
+\section{Objective}
+This tutorial will help you become familiar with conducting species delimitation in a Bayesian framework using biallelic markers (AFLP or SNP data) using the programs \program{SNAPP} and \program{BEAST}.
+We will use example SNP data for geckos (genus \textit{Hemidactylus}) and the software package \beast version 2 \citep{bouckaert14}.
+We will work through the steps necessary for setting up the required packages on your computer, setting up the XML file, and testing species delimitation models using marginal likelihood estimation and Bayes factors.  
+
+\section{Version, Author information, and Acknowledgements}
+This tutorial was written by Adam Leach\'e for \beast version 2.1.2. Remco Bouckaert helped troubleshoot the tutorial.
+The layout of the tutorial is a modified version of a divergence time tutorial written by Jamie Oaks \href{https://github.com/joaks1}{\url{(https://github.com/joaks1)}}, which he borrowed from Tracy Heath. 
+A similar \href{http://www.beast2.org/wiki/index.php/BFD*}{tutorial} is provided at the \beast website. This work is licensed under a \href{http://creativecommons.org/licenses/by/4.0/deed.en_US}{Creative Commons Attribution 4.0 International License.}
+
+\section{Background Information}
+New coalescent-based species delimitation methods are increasing the statistical rigor and objectivity of taxonomy \citep{Fujita2012}. However, expanding these methods to a genome-scale is limited by their reliance on gene trees. Combining hundreds or thousands of gene trees into a single species delimitation framework presents some serious computational challenges. A new method for estimating species trees without gene trees is available \citep{Bryant2012}, and we have leveraged this approach for species delimitation \citep{Leache14}. The species tree estimation method \verb8SNAPP8 \citep{Bryant2012} estimates species trees directly from biallelic markers (e.g., SNP or AFLP data), which bypasses the necessity of having to explicitly integrate or sample the gene trees at each locus. The method works by estimating the probability of allele frequency change across ancestor/descendent nodes. The result is a posterior distribution for the species tree, species divergence times, and effective population sizes, all obtained without the estimation of gene trees. 
+
+Comparisons among candidate species delimitation models that contain different numbers of species, or different allocations of populations to species, is relatively easy in a Bayesian framework. The general approach requires marginal likelihood estimation (MLE) for each competing species delimitation model. Several different MLE approaches are available in \beast, including path sampling (PS) or stepping-stone (SS) methods \citep{baele12}. Once the MLE values are obtained, the models can be ranked from highest to lowest, and Bayes factors \citep{kass95} can be used to compare models. This approach, called Bayes factor delimitation (BFD), was first implemented by \citet{Grummer13} with DNA sequences in the program *BEAST. The approach was modified to work with genome-wide SNP data (BFD*) using the program \program{SNAPP} \citep{Leache14}.
+
+One advantage of BFD/BFD* over other species delimitation approaches is the ability to integrate over species trees during the species delimitation procedure, which removes the constraint of specifying a guide tree that represents the true species relationships. In other words, with BFD/BFD* you can estimate the species tree and evaluate the species delimitation model at the same time. Another advantage is the ability to compare models that contain different numbers of species, or different assignments of samples to species. However, the user needs to predefine the number of species and sample assignments, and this prevents the method from searching among all possible species assignments.
+
+\section{Programs Used in This Lab}
+We will be using the free, open-source software package, \beast (Bayesian
+Evolutionary Analysis Sampling Trees;
+\href{http://beast2.org}{\url{http://beast2.org}}), for
+estimating species trees.
+For this tutorial, you will need to use \beast version 2.1 or better. 
+The distribution comes with the \program{BEAUTi}, which you will use to manage package plugins (also called add-ons), including \program{SNAPP}.
+
+\program{BEAST} comes with several other utility programs that we will use to prepare 
+input files (\program{BEAUTi}; Bayesian Evolutionary Analysis
+Utility) and summarize output files \program{TreeAnnotator}, and \program{LogCombiner}).
+We will also be using the programs \program{Tracer}
+(\href{http://tree.bio.ed.ac.uk/software/tracer}{\url{http://tree.bio.ed.ac.uk/software/tracer}})
+and \program{FigTree}
+(\href{http://tree.bio.ed.ac.uk/software/figtree}{\url{http://tree.bio.ed.ac.uk/software/figtree}})
+for evaluating, summarizing, and viewing results.
+
+\section{The Data}
+We will be analyzing SNP data for geckos in the \textit{Hemidactylus fasciatus} species complex. Details on how the data were collected are 
+provided in \citep{Leache14}. For this tutorial, we will use a data matrix containing 129 SNPs that is also available for download on \href{http://datadryad.org/resource/doi:10.5061/dryad.r55fb}{Dryad}. Allopatric divergence seems to be the primary mechanism causing speciation in this group. These geckos are restricted to rainforest habitats, and their distributions match those of the major blocks of rainforest in West and Central Africa (Figure \ref{fig:map}). 
+
+For the species delimitation example, we will test species delimitation models based on historical connections between adjacent rainforest blocks. These models differ in the number of species, and how samples are assigned to species. The base model has four species (Figure \ref{fig:map}a). The alternative models are grouped into three classes: (1) lumping: populations are collapsed into the same species, (2) splitting: populations are partitioned into separate species, (3) reassigning: population(s) are allocated into a different species.
+
+    \begin{figure}[htbp]
+        \centering
+        \fbox{\includegraphics[width=0.8\textwidth]{../../images/map.png}}
+        \caption{Geographic sampling of geckos (numbers in symbols indicate sample sizes). Starting taxonomy is shown in (a). BFD* is used to test the alternative species delimitation models outlined in (b) -- (g).}
+        \label{fig:map}
+    \end{figure}
+
+\section{Tutorial}
+\newcounter{stepCounter}
+\newcommand{\step}[2]{\addtocounter{stepCounter}{1} {\bf \hypertarget{step\arabic{stepCounter}}{Step \arabic{stepCounter}:}}\xspace #2\par}
+\newcommand{\intermediate}[1]{#1}
+\input{BFD*-tutorial-steps.tex}
+
+\newpage
+\section{Quick Version of the Tutorial}
+\setcounter{stepCounter}{0}
+\renewcommand{\step}[2]{\addtocounter{stepCounter}{1} {\bf \hyperlink{step\arabic{stepCounter}}{Step \arabic{stepCounter}}:}\xspace #1\par}
+\renewcommand{\intermediate}[1]{}
+\input{BFD*-tutorial-steps.tex}
+
+\newpage
+\section{Additional Information/Resources}
+Other resources for species delimitation in *BEAST include a
+\href{http://beast2.org}{tutorial} provided at the \beast website.  
+Another Bayes factor species delimitation tutorial is included in 
+the species tree estimation tutorial available at the author's \href{http://faculty.washington.edu/leache/wordpress/}{website}. 
+
+\newpage
+\bibliography{../../bib/references}
+
+\end{document}
+
