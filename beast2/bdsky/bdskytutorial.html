@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="generator" content="hevea 2.01">
+<style type="text/css">
+.li-itemize{margin:1ex 0ex;}
+.li-enumerate{margin:1ex 0ex;}
+.dd-description{margin:0ex 0ex 1ex 4ex;}
+.dt-description{margin:0ex;}
+.toc{list-style:none;}
+.footnotetext{margin:0ex; padding:0ex;}
+div.footnotetext P{margin:0px; text-indent:1em;}
+.thefootnotes{text-align:left;margin:0ex;}
+.dt-thefootnotes{margin:0em;}
+.dd-thefootnotes{margin:0em 0em 0em 2em;}
+.footnoterule{margin:1em auto 1em 0px;width:50%;}
+.caption{padding-left:2ex; padding-right:2ex; margin-left:auto; margin-right:auto}
+.title{margin:2ex auto;text-align:center}
+.titlemain{margin:1ex 2ex 2ex 1ex;}
+.titlerest{margin:0ex 2ex;}
+.center{text-align:center;margin-left:auto;margin-right:auto;}
+.flushleft{text-align:left;margin-left:0ex;margin-right:auto;}
+.flushright{text-align:right;margin-left:auto;margin-right:0ex;}
+div table{margin-left:inherit;margin-right:inherit;margin-bottom:2px;margin-top:2px}
+td table{margin:auto;}
+table{border-collapse:collapse;}
+td{padding:0;}
+.cellpadding0 tr td{padding:0;}
+.cellpadding1 tr td{padding:1px;}
+pre{text-align:left;margin-left:0ex;margin-right:auto;}
+blockquote{margin-left:4ex;margin-right:4ex;text-align:left;}
+td p{margin:0px;}
+.boxed{border:1px solid black}
+.textboxed{border:1px solid black}
+.vbar{border:none;width:2px;background-color:black;}
+.hbar{border:none;height:2px;width:100%;background-color:black;}
+.hfill{border:none;height:1px;width:200%;background-color:black;}
+.vdisplay{border-collapse:separate;border-spacing:2px;width:auto; empty-cells:show; border:2px solid red;}
+.vdcell{white-space:nowrap;padding:0px; border:2px solid green;}
+.display{border-collapse:separate;border-spacing:2px;width:auto; border:none;}
+.dcell{white-space:nowrap;padding:0px; border:none;}
+.dcenter{margin:0ex auto;}
+.vdcenter{border:solid #FF8000 2px; margin:0ex auto;}
+.minipage{text-align:left; margin-left:0em; margin-right:auto;}
+.marginpar{border:solid thin black; width:20%; text-align:left;}
+.marginparleft{float:left; margin-left:0ex; margin-right:1ex;}
+.marginparright{float:right; margin-left:1ex; margin-right:0ex;}
+.theorem{text-align:left;margin:1ex auto 1ex 0ex;}
+.part{margin:2ex auto;text-align:center}
+</style><link rel="stylesheet" type="text/css" href="../../beast2.css">
+<title>Birth--Death skyline (BDSKY) tutorial
+</title>
+</head>
+<body ><div id="container">
+<!--HEVEA command line is: hevea bdskytutorial -->
+<!--CUT STYLE article--><!--CUT DEF section 1 --><table class="title"><tr><td style="padding:1ex"><h1 class="titlemain">Birth--Death skyline (BDSKY) tutorial</h1><h3 class="titlerest">Denise K&#XFC;hnert</h3></td></tr>
+</table><!--TOC section id=sec1 Contents-->
+<h2 id="sec1" class="section">Contents</h2><!--SEC END --><ul class="toc"><li class="li-toc">
+<a href="#sec2">1&#XA0;&#XA0;Getting started</a>
+</li><li class="li-toc"><a href="#sec3">2&#XA0;&#XA0;Data analysis using BDSKY</a>
+<ul class="toc"><li class="li-toc">
+<a href="#sec4">2.1&#XA0;&#XA0;The origin of the epidemic</a>
+</li><li class="li-toc"><a href="#sec5">2.2&#XA0;&#XA0;Sampling schemes</a>
+<ul class="toc"><li class="li-toc">
+<a href="#sec6">2.2.1&#XA0;&#XA0;Birth--Death Skyline Serial ($&#X3C8;$-sampling)</a>
+</li></ul>
+</li></ul>
+</li></ul>
+<!--TOC section id=sec2 Getting started-->
+<h2 id="sec2" class="section">1&#XA0;&#XA0;Getting started</h2><!--SEC END --><p>If you haven't installed BEAST2 yet, you can do that at <a href="http://beast2.org"><span style="font-weight:bold">beast2.org</span></a>.</p><p>With BEAST2 installed, use the BEAUti2 add-on manager to add the BDSKY plugin as shown below. This automatically downloads the code and example files.</p><div class="center">
+<img src="figures/BEAUTI_addonmanager.hevea.png">
+</div><div class="center">
+<img src="figures/BEAUTI_BDSKY1.hevea.png">
+</div><p>After restarting BEAUti and loading the alignment <span style="font-family:monospace">26.nex</span>, you should now be able to choose the BDSKY priors in the "Priors" tab: 
+</p><div class="center">
+<img src="figures/BEAUTI_BDSKY2.hevea.png">
+</div>
+<!--TOC section id=sec3 Data analysis using BDSKY-->
+<h2 id="sec3" class="section">2&#XA0;&#XA0;Data analysis using BDSKY</h2><!--SEC END -->
+<!--TOC subsection id=sec4 The origin of the epidemic-->
+<h3 id="sec4" class="subsection">2.1&#XA0;&#XA0;The origin of the epidemic</h3><!--SEC END --><p>The "origin" parameter is the duration of the epidemic represented by the samples at hand. This parameter MUST be larger than the tree height, which often leads to starting problems of the MCMC. If your initial tree is very large, you might have to start with an unrealistically large origin value to account for that. </p>
+<!--TOC subsection id=sec5 Sampling schemes-->
+<h3 id="sec5" class="subsection">2.2&#XA0;&#XA0;Sampling schemes</h3><!--SEC END --><p>The parameters needed for your BDSKY analysis depend on the sampling scheme used for your data. BEAUTI can set up analyses for data sampled serially over time ($&#X3C8;$-sampling, i.e.&#XA0;sampling at a rate $&#X3C8;$, see Section <a href="#psi-sampling">??</a>), or data sampled at one time point ($&#X3C1;$-sampling, i.e.&#XA0;all samples taken at one time point, see Section <a href="#rho-sampling">??</a>) and. Other sampling schemes may include multiple $&#X3C1;$-sampling events (see Section <a href="#Extensions">??</a>) or both serial and contemporaneous sampling, but this requires the user to edit the xml file by hand.</p>
+<!--TOC subsubsection id=sec6 Birth--Death Skyline Serial ($&#X3C8;$-sampling)-->
+<h4 id="sec6" class="subsubsection">2.2.1&#XA0;&#XA0;Birth--Death Skyline Serial ($&#X3C8;$-sampling)</h4><!--SEC END --><p>
+<a id="psi-sampling"></a>
+To be used when lineages are sampled serially/sequentially through time. The parameter $&#X3C8;$ is the sampling rate, the rate at which each lineage is sampled. The time tree would look like this:
+</p><div class="center">
+<img src="figures/figure_serial_tree.hevea.png">
+</div><p>The original parametrization of a birth--death--sampling tree prior consists of 3 parameters, a birth, a death and a sampling parameter. In case of serial sampling they are as follows: </p><ul class="itemize"><li class="li-itemize">
+birth rate $&#X3BB;$
+</li><li class="li-itemize">death rate $&#XB5;$
+</li><li class="li-itemize">sampling rate $&#X3C8;$
+</li></ul><p>Alternatively, they can be rewritten as follows:</p><ul class="itemize"><li class="li-itemize">
+effective reproduction number $R = &#X3BB;/(&#XB5;+ &#X3C8;)$
+</li><li class="li-itemize">total death rate / become uninfectious rate $&#X3B4;= &#XB5;+ &#X3C8;$
+</li><li class="li-itemize">sampling proportion $s = &#X3C8;/ (&#XB5;+ &#X3C8;)$
+</li></ul><p>This reparametrization enables direct estimation of $R$ and intuitive choice of prior distributions and is therefore implemented in BEAUti.
+When parameters are multi-dimensional (i.e.&#XA0;at time $t_i$ the piecewise constant rates change from $R_i, &#X3B4;_i, s_i$ to $R_i+1, &#X3B4;_i+1, s_i+1$) the above operations are performed element wise. <br>
+
+Each parameter can have a different number of changes, specified through the dimension of the parameter. For example, let's say we want 4 intervals for R, 1 for the becomeUninfectiousRate and 2 for sampling: <br>
+</p><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="text-align:center;white-space:nowrap" ><img src="figures/BEAUTI_bdsky_param1.hevea.png">
+&amp;
+<img src="figures/BEAUTI_bdsky_param2.hevea.png"></td></tr>
+</table><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="text-align:center;white-space:nowrap" ><img src="figures/BEAUTI_bdsky_param3.hevea.png">
+&amp;
+<img src="figures/BEAUTI_bdsky_param4.hevea.png"></td></tr>
+</table><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="text-align:center;white-space:nowrap" ><img src="figures/BEAUTI_bdsky_param5.hevea.png">
+&amp;
+<img src="figures/BEAUTI_bdsky_param6.hevea.png"></td></tr>
+</table>
+<!--TOC subsubsection id=sec7 Birth--Death Skyline Contemporary ($&#X3C1;$-sampling)-->
+<h4 id="sec7" class="subsubsection">2.2.2&#XA0;&#XA0;Birth--Death Skyline Contemporary ($&#X3C1;$-sampling)</h4><!--SEC END --><p>
+<a id="rho-sampling"></a>
+To be used when all samples are taken at a single time point, with the probability of each lineage being sampled at that time being $&#X3C1;$. The time tree would look like this:
+</p><div class="center">
+<img src="figures/figure_contemp_tree.hevea.png">
+</div><p>When data is sampled contemporaneously, the sampling rate / proportion parameter is replaced by the sampling probability $&#X3C1;$ in either parametrization.
+The parameter $&#X3C1;$ is the <span style="font-weight:bold">sampling probability</span>, not to be confused with the sampling proportion (s), which is used for serially sampled data.<br>
+
+Choosing the number of intervals, starting values and prior distributions in BEAUTI works as for the serially sampled method, only that you now need to choose "Birth Death Skyline Contemporary" and the sampling proportion is set to 0, and the $&#X3C1;$ (rho) parameter is now included.
+</p><div class="center">
+<img src="figures/BEAUTI_bdsky_contemp.hevea.png">
+</div>
+<!--TOC subsubsection id=sec8 Multiple $&#X3C1;$-sampling events-->
+<h4 id="sec8" class="subsubsection">2.2.3&#XA0;&#XA0;Multiple $&#X3C1;$-sampling events</h4><!--SEC END --><p>
+<a id="Extensions"></a></p><p>Sometimes multiple samples are taken at multiple time points, for example there might be a few samples taken at each of 3 sampling time points. Using $&#X3C8;$-sampling for this sampling scheme is incorrect and leads to the MCMC running and converging very slowly (if at all).<br>
+
+This scenario is not covered by BEAUti. The user can create the XML with BEAUti choosing Birth--Death Skyline Contemporary and then edit the XML file as outlines in the following.<br>
+
+The BDSKY distribution blog in your xml file may then look like this: 
+</p><div class="center">
+<img src="figures/multiplerho.hevea.png">
+</div><p>The times at which samples are taken are specified using:
+</p><div class="center">
+<img src="figures/multiplerhotimes.hevea.png">
+</div><p>
+With <span style="font-style:italic">reverseTimeArrays</span> being set to <span style="font-style:italic">"true"</span>, the sampling times are specified from the time of the last sample (backward in time), rather than forward in time starting at the root (which is the default).</p><p>Here, $&#X3C1;$ (rho) has dimension 1, which means that at each sampling time the probability to be sampled is equal. If one expects them to be different, the dimension can be set to the number of sampling times (3 in this case).</p>
+<!--TOC subsection id=sec9 Choosing prior distributions-->
+<h3 id="sec9" class="subsection">2.3&#XA0;&#XA0;Choosing prior distributions</h3><!--SEC END --><p><span style="font-weight:bold">Please do not just use the default prior distributions in BEAUti! They might be unsuitable for your data!</span><br>
+
+For infectious diseases the meaning of the effective reproduction ratio $R$ is straight forward, which should facilitate the prior choice. In other applications one might have to find out what corresponds to an infection or transmission. </p><p>The sampling proportion is well understood for example in HIV. In developed countries, percentages as high as 70 per cent infected individuals are sampled. Such information can be used to inform the prior distribution for $s$. Due to the parameter correlations discussed in [<a href="#bdsky"></a>, SI] it is important to choose the BDSKY prior distributions carefully and to use all available information.</p>
+<!--TOC section id=sec10 Plotting results-->
+<h2 id="sec10" class="section">3&#XA0;&#XA0;Plotting results</h2><!--SEC END --><p>
+To plot your results use the R script bdsky_plot_2.1.1.R in the doc folder.</p><p>Start R from Terminal and run script with commandline: <span style="font-style:italic">source(bdsky_plot_2.1.1.R) </span></p><p>Input: 
+</p><ul class="itemize"><li class="li-itemize"> 
+a text file listing the log files that should be analyzed (see example file loglist.txt)
+</li><li class="li-itemize">burnin (the percentage of samples that should be ignored from the log file)
+</li><li class="li-itemize">date of the most recent sample (for plotting from past to present)
+</li><li class="li-itemize">gridSize, to define how smooth to plot
+</li></ul><p>Assumptions:
+</p><ul class="itemize"><li class="li-itemize"> 
+The given log file contains parameters named "R0" or "R0x" with index x, 
+	"becomeUninfectiousRate" / "becomeUninfectiousRatex" and 
+	"samplingProportion" / "samplingProportionx"
+</li><li class="li-itemize">The number of R0 parameters determines the interval number
+</li><li class="li-itemize">The parameters becomeUninfectiousRate and samplingProportion are assumed to be either constant or to have the same dimension as R0. 
+</li></ul><p>Windows users, please set usingMacTerminal=0 in the R file to enter input manually.</p><!--TOC section id=sec11 References-->
+<h2 id="sec11" class="section">References</h2><!--SEC END --><dl class="thebibliography"><dt class="dt-thebibliography">
+<a id="bdsky">[bdsky]</a></dt><dd class="dd-thebibliography">
+Tanja Stadler, Denise K&#XFC;hnert, Sebastian Bonhoeffer, and Alexei&#XA0;J Drummond.
+Birth-death skyline plot reveals temporal changes of epidemic spread
+in HIV and hepatitis C virus (HCV).
+<em>Proc Natl Acad Sci U S A</em>, 110(1):228--33, Jan 2013.</dd></dl><!--CUT END -->
+<!--HTMLFOOT-->
+<!--ENDHTML-->
+<!--FOOTER-->
+<hr style="height:2"><blockquote class="quote"><em>This document was translated from L<sup>A</sup>T<sub>E</sub>X by
+</em><a href="http://hevea.inria.fr/index.html"><em>H</em><em><span style="font-size:small"><sup>E</sup></span></em><em>V</em><em><span style="font-size:small"><sup>E</sup></span></em><em>A</em></a><em>.</em></blockquote></div></body>
+</html>

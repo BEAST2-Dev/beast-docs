@@ -1,0 +1,195 @@
+\documentclass[11pt]{article}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\usepackage[colorlinks=false]{hyperref}
+\setlength\parindent{0pt}
+
+\newcommand{\includeimage}[2][]{%
+%HEVEA\imgsrc{#2.hevea.png}%
+%BEGIN LATEX
+\includegraphics[#1]{#2}
+%END LATEX
+}
+
+\title{Birth--Death skyline (BDSKY) tutorial}
+\author{Denise K\"uhnert}
+\date{\today}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\pagebreak
+
+\section{Getting started}
+
+If you haven't installed BEAST2 yet, you can do that at \href{http://beast2.org}{\bf beast2.org}.
+
+With BEAST2 installed, use the BEAUti2 add-on manager to add the BDSKY plugin as shown below. This automatically downloads the code and example files.
+
+\begin{center}
+\includeimage[width=.5\linewidth]{figures/BEAUTI_addonmanager}
+\end{center}
+\begin{center}
+\includeimage[width=.5\linewidth]{figures/BEAUTI_BDSKY1}
+\end{center}
+
+After restarting BEAUti and loading the alignment \texttt{26.nex}, you should now be able to choose the BDSKY priors in the "Priors" tab: 
+\begin{center}
+\includeimage[width=.75\linewidth]{figures/BEAUTI_BDSKY2}
+\end{center}
+
+
+\pagebreak
+\section{Data analysis using BDSKY}
+
+
+\subsection{The origin of the epidemic}
+
+The "origin" parameter is the duration of the epidemic represented by the samples at hand. This parameter MUST be larger than the tree height, which often leads to starting problems of the MCMC. If your initial tree is very large, you might have to start with an unrealistically large origin value to account for that. 
+
+
+
+\subsection{Sampling schemes}
+
+The parameters needed for your BDSKY analysis depend on the sampling scheme used for your data. BEAUTI can set up analyses for data sampled serially over time ($\psi$-sampling, i.e.~sampling at a rate $\psi$, see Section \ref{psi-sampling}), or data sampled at one time point ($\rho$-sampling, i.e.~all samples taken at one time point, see Section \ref{rho-sampling}) and. Other sampling schemes may include multiple $\rho$-sampling events (see Section \ref{Extensions}) or both serial and contemporaneous sampling, but this requires the user to edit the xml file by hand.
+
+
+\subsubsection{Birth--Death Skyline Serial ($\psi$-sampling)}
+\label{psi-sampling}
+To be used when lineages are sampled serially/sequentially through time. The parameter $\psi$ is the sampling rate, the rate at which each lineage is sampled. The time tree would look like this:
+\begin{center}
+\includeimage[width=.4\linewidth]{figures/figure_serial_tree}
+\end{center}
+
+The original parametrization of a birth--death--sampling tree prior consists of 3 parameters, a birth, a death and a sampling parameter. In case of serial sampling they are as follows: 
+
+\begin{itemize}
+\item birth rate $\lambda$
+\item death rate $\mu$
+\item sampling rate $\psi$
+\end{itemize}
+
+Alternatively, they can be rewritten as follows:
+
+\begin{itemize}
+\item effective reproduction number $R = \frac{\lambda}{(\mu + \psi)}$
+\item total death rate / become uninfectious rate $\delta = \mu + \psi$
+\item sampling proportion $s = \frac{\psi }{ (\mu + \psi)}$
+\end{itemize}
+
+This reparametrization enables direct estimation of $R$ and intuitive choice of prior distributions and is therefore implemented in BEAUti.
+When parameters are multi-dimensional (i.e.~at time $t_i$ the piecewise constant rates change from $R_i, \delta_i, s_i$ to $R_{i+1}, \delta_{i+1}, s_{i+1}$) the above operations are performed element wise. \\
+
+Each parameter can have a different number of changes, specified through the dimension of the parameter. For example, let's say we want 4 intervals for R, 1 for the becomeUninfectiousRate and 2 for sampling: \\
+\begin{tabular}{c c}
+%\begin{center}
+\includeimage[width=.4\linewidth]{figures/BEAUTI_bdsky_param1}
+%\end{center}
+&
+%\begin{center}
+\includeimage[width=.4\linewidth]{figures/BEAUTI_bdsky_param2}\\
+%\end{center}
+\end{tabular}
+
+\begin{tabular}{c c}
+%\begin{center}
+\includeimage[width=.4\linewidth]{figures/BEAUTI_bdsky_param3}
+%\end{center}
+&
+%\begin{center}
+\includeimage[width=.4\linewidth]{figures/BEAUTI_bdsky_param4}\\
+%\end{center}
+\end{tabular}
+
+\begin{tabular}{c c}
+%\begin{center}
+\includeimage[width=.4\linewidth]{figures/BEAUTI_bdsky_param5}
+%\end{center}
+&
+%\begin{center}
+\includeimage[width=.4\linewidth]{figures/BEAUTI_bdsky_param6}\\
+%\end{center}
+\end{tabular}
+
+
+\subsubsection{Birth--Death Skyline Contemporary ($\rho$-sampling)}
+\label{rho-sampling}
+To be used when all samples are taken at a single time point, with the probability of each lineage being sampled at that time being $\rho$.  The time tree would look like this:
+\begin{center}
+\includeimage[width=.4\linewidth]{figures/figure_contemp_tree}
+\end{center}
+
+When data is sampled contemporaneously, the sampling rate / proportion parameter is replaced by the sampling probability $\rho$ in either parametrization.
+The parameter $\rho$ is the {\bf sampling probability}, not to be confused with the sampling proportion (s), which is used for serially sampled data.\\
+
+Choosing the number of intervals, starting values and prior distributions in BEAUTI works as for the serially sampled method, only that you now need to choose "Birth Death Skyline Contemporary" and the sampling proportion is set to 0, and the $\rho$ (rho) parameter is now included.
+\begin{center}
+\includeimage[width=.5\linewidth]{figures/BEAUTI_bdsky_contemp}
+\end{center}
+
+\subsubsection{Multiple $\rho$-sampling events}
+\label{Extensions}
+
+Sometimes multiple samples are taken at multiple time points, for example there might be a few samples taken at each of 3 sampling time points. Using $\psi$-sampling for this sampling scheme is incorrect and leads to the MCMC running and converging very slowly (if at all).\\
+
+This scenario is not covered by BEAUti. The user can create the XML with BEAUti choosing Birth--Death Skyline Contemporary and then edit the XML file as outlines in the following.\\
+
+The BDSKY distribution blog in your xml file may then look like this: 
+\begin{center}
+\includeimage[width=\linewidth]{figures/multiplerho}
+\end{center}
+
+The times at which samples are taken are specified using:
+\begin{center}
+\includeimage[width=\linewidth]{figures/multiplerhotimes}
+\end{center}
+With {\it reverseTimeArrays} being set to {\it "true"}, the sampling times are specified from the time of the last sample (backward in time), rather than forward in time starting at the root (which is the default).
+
+Here, $\rho$ (rho) has dimension 1, which means that at each sampling time the probability to be sampled is equal. If one expects them to be different, the dimension can be set to the number of sampling times (3 in this case).
+
+\subsection{Choosing prior distributions}
+
+{\bf Please do not just use the default prior distributions in BEAUti! They might be unsuitable for your data!}\\
+
+For infectious diseases the meaning of the effective reproduction ratio $R$ is straight forward, which should facilitate the prior choice. In other applications one might have to find out what corresponds to an infection or transmission. 
+
+The sampling proportion is well understood for example in HIV. In developed countries, percentages as high as 70 per cent infected individuals are sampled. Such information can be used to inform the prior distribution for $s$. Due to the parameter correlations discussed in \cite[SI]{bdsky} it is important to choose the BDSKY prior distributions carefully and to use all available information.
+
+\section{Plotting results}
+To plot your results use the R script bdsky\_plot\_2.1.1.R in the doc folder.
+
+Start R from Terminal and run script with commandline: {\it source(bdsky\_plot\_2.1.1.R) }
+
+Input: 
+\begin{itemize} 
+\item a text file listing the log files that should be analyzed (see example file loglist.txt)
+\item burnin (the percentage of samples that should be ignored from the log file)
+\item date of the most recent sample (for plotting from past to present)
+\item gridSize, to define how smooth to plot
+\end{itemize}
+
+ Assumptions:
+\begin{itemize} 
+\item The given log file contains parameters named "R0" or "R0x" with index x, 
+	"becomeUninfectiousRate" / "becomeUninfectiousRatex" and 
+	"samplingProportion" / "samplingProportionx"
+\item The number of R0 parameters determines the interval number
+\item The parameters becomeUninfectiousRate and samplingProportion are assumed to be either constant or to have the same dimension as R0. 
+\end{itemize} 
+
+
+Windows users, please set usingMacTerminal=0 in the R file to enter input manually.
+
+\bibliographystyle{plain}
+\bibliography{bdskytutorial}
+
+
+\end{document}  

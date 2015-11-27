@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="generator" content="hevea 2.01">
+<style type="text/css">
+.li-itemize{margin:1ex 0ex;}
+.li-enumerate{margin:1ex 0ex;}
+.dd-description{margin:0ex 0ex 1ex 4ex;}
+.dt-description{margin:0ex;}
+.toc{list-style:none;}
+.footnotetext{margin:0ex; padding:0ex;}
+div.footnotetext P{margin:0px; text-indent:1em;}
+.thefootnotes{text-align:left;margin:0ex;}
+.dt-thefootnotes{margin:0em;}
+.dd-thefootnotes{margin:0em 0em 0em 2em;}
+.footnoterule{margin:1em auto 1em 0px;width:50%;}
+.caption{padding-left:2ex; padding-right:2ex; margin-left:auto; margin-right:auto}
+.title{margin:2ex auto;text-align:center}
+.titlemain{margin:1ex 2ex 2ex 1ex;}
+.titlerest{margin:0ex 2ex;}
+.center{text-align:center;margin-left:auto;margin-right:auto;}
+.flushleft{text-align:left;margin-left:0ex;margin-right:auto;}
+.flushright{text-align:right;margin-left:auto;margin-right:0ex;}
+div table{margin-left:inherit;margin-right:inherit;margin-bottom:2px;margin-top:2px}
+td table{margin:auto;}
+table{border-collapse:collapse;}
+td{padding:0;}
+.cellpadding0 tr td{padding:0;}
+.cellpadding1 tr td{padding:1px;}
+pre{text-align:left;margin-left:0ex;margin-right:auto;}
+blockquote{margin-left:4ex;margin-right:4ex;text-align:left;}
+td p{margin:0px;}
+.boxed{border:1px solid black}
+.textboxed{border:1px solid black}
+.vbar{border:none;width:2px;background-color:black;}
+.hbar{border:none;height:2px;width:100%;background-color:black;}
+.hfill{border:none;height:1px;width:200%;background-color:black;}
+.vdisplay{border-collapse:separate;border-spacing:2px;width:auto; empty-cells:show; border:2px solid red;}
+.vdcell{white-space:nowrap;padding:0px; border:2px solid green;}
+.display{border-collapse:separate;border-spacing:2px;width:auto; border:none;}
+.dcell{white-space:nowrap;padding:0px; border:none;}
+.dcenter{margin:0ex auto;}
+.vdcenter{border:solid #FF8000 2px; margin:0ex auto;}
+.minipage{text-align:left; margin-left:0em; margin-right:auto;}
+.marginpar{border:solid thin black; width:20%; text-align:left;}
+.marginparleft{float:left; margin-left:0ex; margin-right:1ex;}
+.marginparright{float:right; margin-left:1ex; margin-right:0ex;}
+.theorem{text-align:left;margin:1ex auto 1ex 0ex;}
+.part{margin:2ex auto;text-align:center}
+</style><link rel="stylesheet" type="text/css" href="../../beast2.css">
+<title>Dating with FBD model tutorial
+</title>
+</head>
+<body ><div id="container">
+<!--HEVEA command line is: hevea tutorial -->
+<!--CUT STYLE article--><!--CUT DEF section 1 --><table class="title"><tr><td style="padding:1ex"><h1 class="titlemain">Dating with FBD model tutorial</h1><h3 class="titlerest">Alexandra Gavryushkina</h3></td></tr>
+</table>
+<!--TOC section id=sec1 Introduction-->
+<h2 id="sec1" class="section">1&#XA0;&#XA0;Introduction</h2><!--SEC END --><p>The tutorial illustrates how to use the BEAST software to co-estimate gene phylogenies and associated divergence times using fossil evidence and the fossilised birth-death (FBD) model&#XA0;[<a href="#gavr2014">1</a>]. 
+The data required for such an analysis:</p><ul class="itemize"><li class="li-itemize">Molecular data of extant species. </li><li class="li-itemize">Occurrence dates (or ranges) of fossil samples.</li><li class="li-itemize">Prior knowledge about the parameters of the FBD model. It could be a known proportion of sampled extant species, for example.</li><li class="li-itemize">Optionally, you can introduce monophyletic constraints on the phylogeny. </li></ul><p>You will need the following software at your disposal: </p><ul class="itemize"><li class="li-itemize"><span style="font-weight:bold">BEAST</span> - this package contains the BEAST program, BEAUti, TreeAnnotator and other utility programs. This tutorial is written for BEAST v2.2.x. It is available for download from <span style="font-family:monospace">http://www.beast2.org/</span>. A sampled ancestor (SA) package version 1.1.1 available for this version of BEAST supports sampled ancestor trees&#XA0;[<a href="#gavr2014">1</a>] and FBD model. The package can be installed through the package manager in BEAUti. 
+</li><li class="li-itemize"><span style="font-weight:bold">Tracer</span> - this program is used to explore the output of BEAST (and other Bayesian MCMC programs). It graphically and
+quantitively summarizes the distributions of continuous parameters and provides diagnostic information. At the time of
+writing, the current version is v1.6. It is available for download from<br>
+<span style="font-family:monospace">http://tree.bio.ed.ac.uk/software/</span>.
+</li><li class="li-itemize"><span style="font-weight:bold">FigTree</span> - this is an application for displaying and printing molecular phylogenies, in particular those obtained using
+BEAST. At the time of writing, the current version is v1.4.2. It is available for download from <span style="font-family:monospace">http://tree.bio.ed.ac.uk/software/</span>.
+</li></ul><p>
+We assume that users are already familiar with basics of using BEAUti and BEAST. </p>
+<!--TOC section id=sec2 Preparing the XML file-->
+<h2 id="sec2" class="section">2&#XA0;&#XA0;Preparing the XML file</h2><!--SEC END --><p>Having BEAST and SA package installed and sequence data of extant species together with empty sequences of fossil samples in a NEXUS file we can start preparing an XML file - the file which contains the specification of the analysis. First of all we need to upload the NEXUS file to BEAUti. In this tutorial, we use an example NEXUS file, bears.nex, which is available from the <span style="font-family:monospace">examples/nexus/</span> directory for Mac and Linux and <span style="font-family:monospace">examples\nexus\</span> for Windows inside the directory where SA package was installed. The package manager installs packages to <br>
+<span style="font-family:monospace">/Users/&lt;YourName&gt;/Library/Application Support/BEAST/2.2/</span> on Mac, <br>
+<span style="font-family:monospace">/home/&lt;YourName&gt;/.beast/2.2/</span> on Linux, and <br>
+<span style="font-family:monospace">Users\&lt;YourName&gt;\BEAST\2.2\</span> on Windows.</p><p>The example file contains an alignment of a single gene of ten extant species and 24 fossil samples (each site in the fossil sequences is a gap). 
+After loading the alignment you may need to link trees and clock models if this is an alignment of multiple genes. </p><p>The next step is to specify the ages in the <span style="font-weight:bold">Tip Dates</span> panel. Tick the &#X2018;Use tip dates&#X2019; box. Then choose the right options in &#X2018;Dates specified as&#X2019; section. We choose &#X2018;years&#X2019; (the ages are given in My but a year is an appropriate unit since My is a decimal multiple of a year) and &#X2018;Before the present&#X2019; options. Click on the &#X2018;Guess&#X2019; button to load the dates from a separate file or extract the dates from taxon names or type in the dates directly to the cells of the table. In the example NEXUS file, the ages are included in the names of the taxa. So we choose &#X2018;use everything after last _&#X2019; option to extract the dates (see Figure <a href="#fig%3AtipDates">1</a>).</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>	
+<img src="figures/TipDates.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 1: The <span style="font-weight:bold">Tip Dates</span> panel in BEAUti. Select &#X2018;Use tip dates&#X2019; and appropriate &#X2018;Dates specified as&#X2019; options. Then extract the dates from the taxon labels by clicking on &#X2018;Guess&#X2019; button and choosing an appropriate pattern.<a id="fig:tipDates"></a></td></tr>
+</table></div><div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>
+It is also possible to specify the age ranges however BEAUti does not support this option. If you want to do this then finish the XML specification in BEAUti and add the ranges manually. See bears_ranges.xml file in <span style="font-family:monospace">examples/</span> folder in the SA package directory as an example. Note that you still need to specify the ages in BEAUti. These ages should be within the ranges and will be used as initial values. </p><p>Further we need to specify site and clock models. We leave the default site model and choose the &#X2018;Relaxed Clock Log Normal&#X2019; model with all default settings. Next we choose the &#X2018;Fossilised Birth Death Model&#X2019; as the tree prior distribution (see Figure <a href="#fig%3AFBDmodel">2</a>).</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>	
+<img src="figures/FBDmodel.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 2: Choose the &#X2018;Fossilised Birth Death Model&#X2019; in the <span style="font-weight:bold">Priors</span> panel. <a id="fig:FBDmodel"></a></td></tr>
+</table></div>
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>In the default settings of the FBD model, the proportion of species sampled at present, &#X3C1;, is fixed to one. For the example data, we leave this setting. In other analyses, you might need to change this value depending on the sampling scheme. Also you might choose another parameter to be fixed or estimate all the parameters placing informative prior distributions on one or more parameters. Although all the parameters in this model are identifiable, i.e., can be inferred from the phylogeny, in absence of comparative data of fossil samples we need to fix or place an informative prior distribution on one of the parameters. You also may need to adjust the initial values of the parameters, e.g., time of origin, which has to be older than the oldest fossil sample. If you believe all the fossil samples are crown, that is the most recent common ancestor of all taxa included in the analysis is not a fossil or, in other words, the root of the phylogeny is a two-degree node and not a sampled node, then also tick &#X2018;Condition on Root&#X2019; box (see Figure <a href="#fig%3AFBDsettings">3</a>). &#X2018;Condition on Rho Sampling&#X2019; is preferable for a dating analysis and we leave it selected. </p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>	
+<img src="figures/FBDsettings.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 3: The settings of the FBD model. All the parameter except for &#X3C1; are estimated and &#X3C1; is fixed to the one meaning that we sampled all the known species in the clade. We assume the most recent ancestor of all the taxa can be a fossil sample. So we do not select &#X2018;Condition On Root&#X2019;. <a id="fig:FBDsettings"></a></td></tr>
+</table></div>
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>Further, you may specify monophyletic constraints on the same panel. Click the plus button at the bottom of the <span style="font-weight:bold">Priors</span> panel, name the monophyletic clade and move all the taxa included in the clade to the right window. Then tick the &#X2018;monophyletic&#X2019; box next to the &#X2018;&lt;Clade_name&gt;.prior&#X2019; (Canidae.prior in the example) and leave the prior distribution as &#X2018;[none]&#X2019; (see Figures <a href="#fig%3AMonophyleticClade">4</a> and <a href="#fig%3AMonophyleticConstraint">5</a>). We do not recommend to specify any distribution for internal nodes because the interaction between multiple distributions applied to the phylogeny is not well understood.</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>	
+<img src="figures/MonophyleticClade.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 4: Defining a clade. Click the plus button at the bottom of the <span style="font-weight:bold">Priors</span> panel and specify the clade. Type in the name of the clade and put the clade members to the right window using arrow buttons. <a id="fig:MonophyleticClade"></a></td></tr>
+</table></div>
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>	
+<img src="figures/MonophyleticConstraint.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 5: Introducing monophyletic constraints in the <span style="font-weight:bold">Priors</span> panel. Select &#X2018;monophyletic&#X2019; option next to the clade prior. Leave the prior as &#X2018;[none]&#X2019;. <a id="fig:MonophyleticConstraint"></a></td></tr>
+</table></div>
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>Specify all the remaining prior distributions and proceed to the <span style="font-weight:bold">MCMC</span> panel. We only change the &#X2018;Log Every&#X2019; option for the &#X2018;screenlog&#X2019; to 10000 to make the output of BEAST analysis more compact. Then save the file. Now the input XML file for BEAST is ready and you can run BEAST. The resulting XML file, bears.xml, prepared following this tutorial can be found in <span style="font-family:monospace">examples/</span> (or <span style="font-family:monospace">examples\</span> for Windows) directory in the SA package directory. </p>
+<!--TOC section id=sec3 Analysing the results.-->
+<h2 id="sec3" class="section">3&#XA0;&#XA0;Analysing the results.</h2><!--SEC END --><p>The output .log and .trees files will be in the same directory where the XML file is after the analysis is finished. Useful information is reported to the screen output. See this for information about the data, citations, and suggestions for improvement of the operator performance. </p><p>Open the LOG file in Tracer to review estimated statistics. For this analysis, the important parameters are the tree model parameters: origin, diversification rate, turnover and sampling proportion. Another statistic of interest is the sampled ancestor count (&#X2018;SAcountFBD&#X2019;) which is the number of fossils that are direct ancestors of other fossils or extant taxa. Figure&#XA0;<a href="#fig%3ATracerOutput">6</a> shows the estimates of the model parameters and the posterior distribution for the number of sampled ancestors. </p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>	
+<img src="figures/TracerOutput.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 6: The posterior estimates from the bear analysis in Tracer. <a id="fig:TracerOutput"></a></td></tr>
+</table></div>
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>Use TreeAnnotator to summarise the tree distribution and FigTree to view the summary tree. The summary tree of trees in bears.trees is shown in Figure&#XA0;<a href="#fig%3AFigTree">7</a>. It is obtained using TreeAnnotator with 10% burnin, zero &#X2018;Posterior probability limit&#X2019;, &#X2018;Maximum Clade Credibility Tree&#X2019; as the &#X2018;Target tree type&#X2019; and &#X2018;Mean heights&#X2019; as &#X2018;Node heights&#X2019;. To find the maximum clade credibility tree the TreeAnnotator takes into account sampled ancestor clades, that is, any two clades with the same taxa are considered as distinct clades if the most recent common ancestor in one clade is a sampled node and in another clade is a bifurcation node. TreeAnnotator gives sensible results for sampled ancestor trees only in case when fossil ages are fixed. </p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>	
+<img src="figures/FigTree.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 7: FigTree view of the maximum clade credibility tree with mean node heights obtained with TreeAnnotator. The strictly horizontal branches (zero length branches) represent sampled ancestor nodes. <a id="fig:FigTree"></a></td></tr>
+</table></div>
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><!--TOC section id=sec4 References-->
+<h2 id="sec4" class="section">References</h2><!--SEC END --><dl class="thebibliography"><dt class="dt-thebibliography">
+<a id="gavr2014">[1]</a></dt><dd class="dd-thebibliography">
+A.&#XA0;Gavryushkina, D.&#XA0;Welch, T.&#XA0;Stadler, and A.&#XA0;J. Drummond.
+Bayesian inference of sampled ancestor trees for epidemiology and
+fossil calibration.
+<em>PLoS Computational Biology</em>, 10(12):e1003919, 2014.</dd></dl><!--CUT END -->
+<!--HTMLFOOT-->
+<!--ENDHTML-->
+<!--FOOTER-->
+<hr style="height:2"><blockquote class="quote"><em>This document was translated from L<sup>A</sup>T<sub>E</sub>X by
+</em><a href="http://hevea.inria.fr/index.html"><em>H</em><em><span style="font-size:small"><sup>E</sup></span></em><em>V</em><em><span style="font-size:small"><sup>E</sup></span></em><em>A</em></a><em>.</em></blockquote></div></body>
+</html>

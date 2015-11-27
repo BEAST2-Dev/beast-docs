@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="generator" content="hevea 2.01">
+<style type="text/css">
+.li-itemize{margin:1ex 0ex;}
+.li-enumerate{margin:1ex 0ex;}
+.dd-description{margin:0ex 0ex 1ex 4ex;}
+.dt-description{margin:0ex;}
+.toc{list-style:none;}
+.footnotetext{margin:0ex; padding:0ex;}
+div.footnotetext P{margin:0px; text-indent:1em;}
+.thefootnotes{text-align:left;margin:0ex;}
+.dt-thefootnotes{margin:0em;}
+.dd-thefootnotes{margin:0em 0em 0em 2em;}
+.footnoterule{margin:1em auto 1em 0px;width:50%;}
+.caption{padding-left:2ex; padding-right:2ex; margin-left:auto; margin-right:auto}
+.title{margin:2ex auto;text-align:center}
+.titlemain{margin:1ex 2ex 2ex 1ex;}
+.titlerest{margin:0ex 2ex;}
+.center{text-align:center;margin-left:auto;margin-right:auto;}
+.flushleft{text-align:left;margin-left:0ex;margin-right:auto;}
+.flushright{text-align:right;margin-left:auto;margin-right:0ex;}
+div table{margin-left:inherit;margin-right:inherit;margin-bottom:2px;margin-top:2px}
+td table{margin:auto;}
+table{border-collapse:collapse;}
+td{padding:0;}
+.cellpadding0 tr td{padding:0;}
+.cellpadding1 tr td{padding:1px;}
+pre{text-align:left;margin-left:0ex;margin-right:auto;}
+blockquote{margin-left:4ex;margin-right:4ex;text-align:left;}
+td p{margin:0px;}
+.boxed{border:1px solid black}
+.textboxed{border:1px solid black}
+.vbar{border:none;width:2px;background-color:black;}
+.hbar{border:none;height:2px;width:100%;background-color:black;}
+.hfill{border:none;height:1px;width:200%;background-color:black;}
+.vdisplay{border-collapse:separate;border-spacing:2px;width:auto; empty-cells:show; border:2px solid red;}
+.vdcell{white-space:nowrap;padding:0px; border:2px solid green;}
+.display{border-collapse:separate;border-spacing:2px;width:auto; border:none;}
+.dcell{white-space:nowrap;padding:0px; border:none;}
+.dcenter{margin:0ex auto;}
+.vdcenter{border:solid #FF8000 2px; margin:0ex auto;}
+.minipage{text-align:left; margin-left:0em; margin-right:auto;}
+.marginpar{border:solid thin black; width:20%; text-align:left;}
+.marginparleft{float:left; margin-left:0ex; margin-right:1ex;}
+.marginparright{float:right; margin-left:1ex; margin-right:0ex;}
+.theorem{text-align:left;margin:1ex auto 1ex 0ex;}
+.part{margin:2ex auto;text-align:center}
+</style><link rel="stylesheet" type="text/css" href="../../beast2.css">
+<title>AR</title>
+</head>
+<body ><div id="container">
+<!--HEVEA command line is: hevea AR -->
+<!--CUT STYLE article--><!--CUT DEF section 1 --><table class="title"><tr><td style="padding:1ex"><h1 class="titlemain">Ancestral Reconstruction/Discrete Phylogeography with BEAST 2.2.x</h1><h3 class="titlerest">Remco Bouckaert <span style="font-family:monospace">remco@cs.auckland.ac.nz</span> and Walter Xie</h3></td></tr>
+</table>
+<!--TOC section id=sec1 Introduction-->
+<h2 id="sec1" class="section">1&#XA0;&#XA0;Introduction</h2><!--SEC END --><p>In this tutorial we describe a full Bayesian framework for phylogeography developed in [<a href="#Lemey%3A2009uq">Lemey etal., 2009</a>].</p><p>You will need the following software at your disposal:</p><ul class="itemize"><li class="li-itemize"><span style="font-weight:bold">BEAST</span> - this package contains the BEAST program, BEAUti, TreeAnnotator and other utility programs. This tutorial is written for BEAST v2.2.x, which has support for multiple partitions. It is available for download from <br>
+<span style="font-family:monospace">http://www.beast2.org/</span>.
+</li><li class="li-itemize"><span style="font-weight:bold">Tracer</span> - this program is used to explore the output of BEAST (and other Bayesian MCMC programs). It graphically and
+quantitively summarizes the distributions of continuous parameters and provides diagnostic information. At the time of
+writing, the current version is v1.6. It is available for download from <span style="font-family:monospace">http://beast.bio.ed.ac.uk/</span>.
+</li><li class="li-itemize"><span style="font-weight:bold">FigTree</span> - this is an application for displaying and printing molecular phylogenies, in particular those obtained using
+BEAST. At the time of writing, the current version is v1.4.2. It is available for download from <span style="font-family:monospace">http://tree.bio.ed.ac.uk/</span>.
+</li><li class="li-itemize"><span style="font-weight:bold">Spread</span> for summarysing the geographic spread in a KML file (available from <span style="font-family:monospace">http://www.kuleuven.ac.be/aidslab/phylogeography/SPREAD.html</span>.
+</li><li class="li-itemize"><span style="font-weight:bold">google-earth</span> for displaying the KML file (just google for it, if you have not already have it installed).
+</li></ul><p>This tutorial guides you through a discrete phylogegraphy analysis of a H5N1 epidemic in South China.
+The data is a subset of a larger set compiled by [<a href="#wallace%3A2007st">Wallace etal., 2007</a>].
+It consists of 43 sequences of 1698 characters.</p><p>We go through the following steps:
+</p><ul class="itemize"><li class="li-itemize">
+The first step is to install the beast-classic package that contains the phylogegraphic models. 
+</li><li class="li-itemize">Then, we use BEAUti to set up the analysis, and write it to an XML file.
+</li><li class="li-itemize">We use BEAST to run the MCMC analysis based on the XML file.
+</li><li class="li-itemize">The results will need to be checked for convergence using Tracer.
+</li><li class="li-itemize">Finally, we post-process the output of the MCMC so we can visualise the geographical dispersion.
+</li></ul><!--TOC subsubsection id=sec2 Set up BEAUti for phylogeography-->
+<h4 id="sec2" class="subsubsection">Set up BEAUti for phylogeography</h4><!--SEC END --><p>Phylogeography as described in this tutorial is part of the <span style="font-family:monospace">beast-classic</span> package.
+If you not already have it installed, you can
+install the package through BEAUti. Start BEAUti by double clicking on its icon. 
+Select the <span style="font-family:monospace">File</span>/<span style="font-family:monospace">Manage Packages</span> menu. A dialog pops up showing the packages already installed. </p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/addonmgr.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 1: Package manager</td></tr>
+</table></div>
+ 
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>Select the BEAST-CLASSIC entry in the list, and click the Install button. After a little while the dialog is updated and it shows that the package is now installed.
+BEAST-CLASSIC requires BEASTlabs, so if you have not already installed BEASTlabs, an error message may be shown warning that BEASTlabs should be installed as well.</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/addonmgr2.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 2: Package manager showing packages already installed</td></tr>
+</table></div>
+ 
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>Please restart BEAUti after new packages are installed. </p><!--TOC subsection id=sec3 BEAUti-->
+<h3 id="sec3" class="subsection">BEAUti</h3><!--SEC END --><!--TOC subsubsection id=sec4 Loading the NEXUS file -->
+<h4 id="sec4" class="subsubsection">Loading the NEXUS file </h4><!--SEC END --><p>To load a NEXUS format alignment, simply select the <span style="font-family:monospace">Import
+Alignment</span> option from the File menu: </p><p>Select the file called <span style="font-family:monospace">H5N1.nex</span>, which is located in the place where the beast-classic package is installed 
+under the <span style="font-family:monospace">examples/nexus</span> directory. Typically, packages are installed here:
+</p><ul class="itemize"><li class="li-itemize">
+for Windows, in your home directory (e.g. <span style="font-family:monospace">c:</span>\<span style="font-family:monospace">Users</span>\<span style="font-family:monospace">joe</span>) under the <span style="font-family:monospace">BEAST</span> directory,
+</li><li class="li-itemize">for Mac, in the <span style="font-family:monospace">Library/Application Support/BEAST</span> directory in your home directory (e.g. <span style="font-family:monospace">/Users/joe</span>),
+</li><li class="li-itemize">for Linux, in the <span style="font-family:monospace">.beast</span> directory in your home directory (e.g <span style="font-family:monospace">/home/joe</span>).
+</li></ul><p>The file contains an alignment of sequences. The <span style="font-family:monospace">H5N1.nex</span> looks like this (content has been truncated):</p><pre class="verbatim">#NEXUS
+BEGIN DATA;
+       DIMENSIONS  NTAX=43 NCHAR=1698;
+       FORMAT DATATYPE=DNA GAP=- MISSING=?;
+       MATRIX  
+A_chicken_Fujian_1042_2005    ATGGAGAAAATAGTGCTTCTTCTT...
+A_duck_Fujian_897_2005        ATGGAGAAAATAGTGCTTCTTCTT...
+A_duck_Fujian_13_2002         ATGGAGAAAATAGTGCTTCTTCTT...
+A_swine_Fujian_F1_2001        ATGGAGAAAATAGTGCTTCTTCTT...
+A_Chicken_Guangdong_810_2005  ATGGAGAAAATAGTACTTCTTCTT...
+A_goose_Guangdong_2216_2005   ATGGAGAAAATAGTGCTTCTTCTT...
+         ... ...
+END;
+</pre><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/AddPartition.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 3: Add Partition window (Only appear if related packages are installed).</td></tr>
+</table></div>
+
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>An <span style="font-family:monospace">Add Partition</span> window (Figure <a href="#fig%3AaddPartition">3</a>) would pop up if the related package is installed. Select <span style="font-family:monospace">Add Alignment</span> and click <span style="font-weight:bold">OK</span> to continue.</p><p>Once loaded, a partition is displayed in the main panel.
+You can double click any alignment (partition) to show its detail.</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/BEAUti_DataPartitions.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 4: Data partition panel after loading alignment.</td></tr>
+</table></div>
+ 
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><!--TOC subsubsection id=sec5 Set up dates-->
+<h4 id="sec5" class="subsubsection">Set up dates</h4><!--SEC END --><p>We want to use tip dates for this analysis.</p><p>Select the &#X2019;Tip Dates&#X2019; tab, and click the &#X2019;Use tip dates&#X2019; check box.</p><p>Since we can derive the date from the taxon names, click the &#X2019;Guess&#X2019; button.</p><p>A dialog pops up, where we can specify the dates as follows: the dates are encoded after the last underscore in the name.
+So, we want to use everything after the last underscore, as shown in Figure <a href="#fig.dates">5</a>.</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/BEAUti_dates.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 5: Setting up the dates for H5N1</td></tr>
+</table></div>
+
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>Click OK and the dates are populated by the correct value. Always double check that this happened correctly and no strange outliers or wrong encodings cause any problems, of course.</p><!--TOC subsubsection id=sec6 Setting the substitution model-->
+<h4 id="sec6" class="subsubsection">Setting the substitution model</h4><!--SEC END --><p>Select the Site model tab, and change the site model to HKY, and frequency model to &#X2018;empirical&#X2019;.</p><p>Also, set the gamma category count to 4, and check the estimate box on the &#X2019;Shape&#X2019; parameter that now pops up.
+The screen should look like this:</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/BEAUti_sitemodel.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 6: Setting the site model</td></tr>
+</table></div>
+
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><!--TOC subsubsection id=sec7 Setting the clock model-->
+<h4 id="sec7" class="subsubsection">Setting the clock model</h4><!--SEC END --><p>We use a strict clock, but to make the analysis converge a bit quicker, we fix the clock rate to 0.004.
+First, click the menu Mode, and unset &#X2019;Automatically set clock rate&#X2019;. Then, uncheck the estimate flag on the clock rate, and change the rate to 0.004.
+The screen should look like this:</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/BEAUti_clockmodel.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 7: Setting the clock model</td></tr>
+</table></div>
+
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><!--TOC subsubsection id=sec8 Priors-->
+<h4 id="sec8" class="subsubsection">Priors</h4><!--SEC END --><p>Change the tree prior from Yule to Coalescent with Constant Population. The other priors are fine. The screen should look like this:</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/BEAUti_priors.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 8: Setting the tree prior</td></tr>
+</table></div>
+
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><!--TOC subsubsection id=sec9 Setting up a discrete trait-->
+<h4 id="sec9" class="subsubsection">Setting up a discrete trait</h4><!--SEC END --><p>Go to the Partitions tab, and click the + button at the bottom of the screen.
+If the installation of the beast-classic package went OK, a dialog pops up, where you can select what to add (Figure&#XA0;<a href="#fig.BEAUti_trait">9</a>).</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/BEAUti_trait.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 9: Add discrete trait</td></tr>
+</table></div>
+
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>Select &#X2019;Add discrete trait&#X2019; and click OK. Now you can give a name to the trait, and select a tree to associate the trait with. Here we will use &#X2019;location&#X2019; (Figure&#XA0;<a href="#fig.BEAUti_trait2">10</a>).</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/BEAUti_trait2.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 10: Naming location trait</td></tr>
+</table></div>
+
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>Change the name and click OK. Now, a dialog pops up where you can manually add the locations. However, the location is already encoded in the name, so we can &#X2018;guess&#X2019; it. Click the Guess button and a dialog pops up where we can choose to define the names by splitting on underscore and select the third group. Before you click OK, the screen should look like Figure&#XA0;<a href="#fig.BEAUti_trait3">11</a>.</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/BEAUti_trait3.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 11: Guess location</td></tr>
+</table></div>
+
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>After clicking OK, the list is populated by locations, like Figure&#XA0;<a href="#fig.BEAUti_trait4">12</a></p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/BEAUti_trait4.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 12: Locations</td></tr>
+</table></div>
+
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>You want to double check that all locations are indeed the ones you want, because it is easy for an irregularity to creep into taxon names, and the guess-work may not be correct.
+Click close, and the data partitions panel has a new partition added for location (Figure&#XA0;<a href="#fig.BEAUti_DataPartitions2">13</a>).</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/BEAUti_DataPartitions2.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 13: Data partitions panel has a new partition added for location</td></tr>
+</table></div>
+
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>To get the trait edit dialog back, double click the location partition.</p><!--TOC subsubsection id=sec10 Setting the site model-->
+<h4 id="sec10" class="subsubsection">Setting the site model</h4><!--SEC END --><p>Click the site model tab, and select the &#X2019;location&#X2019; on the left.
+This shows the site model for the trait (Figure&#XA0;<a href="#fig.BEAUti_sitemodel2">14</a>).</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/BEAUti_sitemodel2.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 14: Site model for the trait</td></tr>
+</table></div>
+
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><!--TOC subsubsection id=sec11 Setting the clock model-->
+<h4 id="sec11" class="subsubsection">Setting the clock model</h4><!--SEC END --><p>Click the clock model tab, and select the &#X2019;location&#X2019; on the left.
+This shows the strict clock for the trait (Figure&#XA0;<a href="#fig.BEAUti_clockmodel2">15</a>).</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/BEAUti_clockmodel2.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 15: Clock model for the trait</td></tr>
+</table></div>
+
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><!--TOC subsubsection id=sec12 Priors-->
+<h4 id="sec12" class="subsubsection">Priors</h4><!--SEC END --><p>Click the priors tab, to show the extra priors added for the discrete analysis (Figure&#XA0;<a href="#fig.BEAUti_priors2">16</a>).</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/BEAUti_priors2.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 16: The extra priors added for the discrete analysis</td></tr>
+</table></div>
+
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><!--TOC subsubsection id=sec13 Setting the MCMC options -->
+<h4 id="sec13" class="subsubsection">Setting the MCMC options </h4><!--SEC END --><p>The next tab, <span style="font-weight:bold">MCMC</span>, provides more general
+settings to control the length of the MCMC and the file names. </p><p>Firstly we have the <span style="font-weight:bold">Length of chain</span>. This is the number of
+steps the MCMC will make in the chain before finishing. The appropriate length of the chain depends on the size of the data set, the complexity of the
+model and the accuracy of the answer required. The default value of 10,000,000
+is entirely arbitrary and should be adjusted according to the size
+of your data set. For this data set let&#X2019;s initially set the chain
+length to 3,000,000 as this will run reasonably quickly on most modern
+computers (less than 10 minutes).</p><p>The next options specify how often the parameter values in the Markov
+chain should be displayed on the screen and recorded in the log file.
+The screen output is simply for monitoring the programs progress so
+can be set to any value (although if set too small, the sheer quantity
+of information being displayed on the screen will actually slow the
+program down). For the log file, the value should be set relative
+to the total length of the chain. Sampling too often will result in
+very large files with little extra benefit in terms of the precision
+of the analysis. Sample too infrequently and the log file will not
+contain much information about the distributions of the parameters. 
+You probably want to aim to store no more than 10,000 samples so this should be
+set to no less than chain length / 10,000.</p><p>For this exercise we will set the screen log to 10,000, and the file log to 2,000 and tree log to 2,000 (Figure <a href="#fig.MCMC">17</a>). The final two options give the file names of the log files for the sampled parameters and
+the trees. These will be set to a default based on the name of the
+imported NEXUS file. </p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/BEAUti_MCMC.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 17: Setting up the MCMC parameters.</td></tr>
+</table></div>
+
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>If you are using windows then we suggest you add the suffix <span style="font-family:monospace">.txt</span> to both of these (so,
+<span style="font-family:monospace">H5N1.log.txt</span> and <span style="font-family:monospace">H5N1.trees.txt</span>) so that Windows recognizes
+these as text files. </p><!--TOC subsubsection id=sec14 Generating the BEAST XML file -->
+<h4 id="sec14" class="subsubsection">Generating the BEAST XML file </h4><!--SEC END --><p>We are now ready to create the BEAST XML file. To do this, either select the <span style="font-weight:bold">File/Save</span> or <span style="font-weight:bold">File/Save As</span> option from the <span style="font-weight:bold">File</span> menu. Check the default priors setting and click <span style="font-weight:bold">Continue</span>. Save the file with an appropriate name (we usually end the filename with <span style="font-family:monospace">.xml</span>, i.e., <span style="font-family:monospace">RacRABC.xml</span>). We are now ready to run the file through BEAST. </p><!--TOC subsection id=sec15 Running BEAST -->
+<h3 id="sec15" class="subsection">Running BEAST </h3><!--SEC END --><p>Now run BEAST and when it asks for an input file, provide your newly
+created XML file as input by click <span style="font-weight:bold">Choose File ...</span>, and then click <span style="font-weight:bold">Run</span> (Figure <a href="#fig.BEAST">18</a>). </p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/BEAST.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 18: Launching BEAST.</td></tr>
+</table></div>
+ 
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>BEAST will then run until it has finished
+reporting information to the screen. The actual results files are
+saved to the disk in the same location as your input file. The output to the screen will
+look something like this: </p><pre class="verbatim"><span style="font-size:xx-small">
+
+                        BEAST v2.2.0, 2002-2015
+             Bayesian Evolutionary Analysis Sampling Trees
+                       Designed and developed by
+ Remco Bouckaert, Alexei J. Drummond, Andrew Rambaut &amp; Marc A. Suchard
+                                    
+                     Department of Computer Science
+                         University of Auckland
+                        remco@cs.auckland.ac.nz
+                        alexei@cs.auckland.ac.nz
+                                    
+                   Institute of Evolutionary Biology
+                        University of Edinburgh
+                           a.rambaut@ed.ac.uk
+                                    
+                    David Geffen School of Medicine
+                 University of California, Los Angeles
+                           msuchard@ucla.edu
+                                    
+                      Downloads, Help &amp; Resources:
+                           http://beast2.org/
+                                    
+  Source code distributed under the GNU Lesser General Public License:
+                   http://github.com/CompEvol/beast2
+                                    
+                           BEAST developers:
+   Alex Alekseyenko, Trevor Bedford, Erik Bloomquist, Joseph Heled, 
+ Sebastian Hoehna, Denise Kuehnert, Philippe Lemey, Wai Lok Sibon Li, 
+Gerton Lunter, Sidney Markowitz, Vladimir Minin, Michael Defoin Platel, 
+                 Oliver Pybus, Chieh-Hsi Wu, Walter Xie
+                                    
+                               Thanks to:
+          Roald Forsberg, Beth Shapiro and Korbinian Strimmer
+
+File: H5N1.xml seed: 1422413146822 threads: 1
+Random number seed: 1422413146822
+
+... ...
+
+        2980000     -5980.9740       243.0        -5831.4429      -149.5311 2m22s/Msamples
+        2990000     -5989.5101       240.6        -5831.7579      -157.7522 2m22s/Msamples
+        3000000     -5974.5263       243.7        -5822.6040      -151.9222 2m22s/Msamples
+
+Operator                                           Tuning    #accept    #reject      Pr(m)  Pr(acc|m)
+ScaleOperator(treeScaler.t:H5N1)                   0.7016       1515      52031     0.0178     0.0283 Try setting scaleFactor to about 0.838
+ScaleOperator(treeRootScaler.t:H5N1)               0.6473       4281      49470     0.0178     0.0796 Try setting scaleFactor to about 0.805
+Uniform(UniformOperator.t:H5N1)                         -     223496     311065     0.1784     0.4181 
+SubtreeSlide(SubtreeSlide.t:H5N1)                  1.0905      43385     224037     0.0892     0.1622 
+Exchange(narrow.t:H5N1)                                 -      45722     221721     0.0892     0.1710 
+Exchange(wide.t:H5N1)                                   -        272      52908     0.0178     0.0051 
+WilsonBalding(WilsonBalding.t:H5N1)                     -        308      53151     0.0178     0.0058 
+ScaleOperator(KappaScaler.s:H5N1)                  0.5009        436       1378     0.0006     0.2404 
+ScaleOperator(gammaShapeScaler.s:H5N1)             0.4178        470       1316     0.0006     0.2632 
+ScaleOperator(PopSizeScaler.t:H5N1)                0.4261      13910      39472     0.0178     0.2606 
+ScaleOperator(georateScaler.s:location)            0.5944     150520     383804     0.1784     0.2817 
+BitFlipOperator(indicatorFlip.s:location)               -     163471     372882     0.1784     0.3048 
+ScaleOperator(geoMuScaler.c:location)              0.2809      17932      35522     0.0178     0.3355 
+BitFlipBSSVSOperator(BSSVSoperator.c:location)          -     103321     432205     0.1784     0.1929 
+
+     Tuning: The value of the operator's tuning parameter, or '-' if the operator can't be optimized.
+    #accept: The total number of times a proposal by this operator has been accepted.
+    #reject: The total number of times a proposal by this operator has been rejected.
+      Pr(m): The probability this operator is chosen in a step of the MCMC (i.e. the normalized weight).
+  Pr(acc|m): The acceptance probability (#accept as a fraction of the total proposals for this operator).
+
+
+Total calculation time: 434.077 seconds
+End likelihood: -5974.526339265577
+</span></pre><!--TOC subsection id=sec16 Analysing the results-->
+<h3 id="sec16" class="subsection">Analysing the results</h3><!--SEC END --><p>Run the program called <span style="font-weight:bold">Tracer</span> to analyze the output of BEAST. When the main
+window has opened, choose <span style="font-weight:bold">Import Trace File...</span> from the <span style="font-weight:bold">File</span> menu and select the file that
+BEAST has created called <span style="font-family:monospace">H5N1.log</span>. 
+You should now see a window like in Figure <a href="#fig.tracer">19</a>.</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/Tracer.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 19: Tracer with the H5N1 data.</td></tr>
+</table></div>
+ 
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>Remember that MCMC is a stochastic algorithm so the actual numbers will not be exactly the same.</p><p>On the left hand side is a list of the different quantities that BEAST has logged. There are traces for the posterior (this
+is the log of the product of the tree likelihood and the prior probabilities), and the continuous parameters. Selecting a trace
+on the left brings up analyses for this trace on the right hand side depending on tab that is selected. When first opened, the
+&#X2018;posterior&#X2019; trace is selected and various statistics of this trace are shown under the Estimates tab.
+In the top right of the window is a table of calculated statistics for the selected trace. </p><p>Tracer will plot a (marginal posterior) distribution for the selected parameter and also give you statistics such as the mean and median. The <span style="font-family:monospace">95% HPD lower</span> or <span style="font-family:monospace">upper</span> stands for <span style="font-style:italic">highest posterior density interval</span> and represents the most compact interval on the selected parameter that contains 95% of the posterior probability. It can be thought of as a Bayesian analog to a confidence interval. </p><!--TOC subsection id=sec17 Obtaining an estimate of the phylogenetic tree-->
+<h3 id="sec17" class="subsection">Obtaining an estimate of the phylogenetic tree</h3><!--SEC END --><p>BEAST also produces a sample of plausible trees. 
+These can be summarized using the program <span style="font-weight:bold">TreeAnnotator</span>. This will take the set of trees and identify a single tree that best represents the posterior distribution. It will then annotate this selected tree topology with the mean ages of all the
+nodes as well as the 95% HPD interval of divergence times for each clade in the selected tree. It will also calculate the posterior clade probability for each
+node. Run the <span style="font-weight:bold">TreeAnnotator</span> program and set it up to look like in Figure <a href="#fig.TreeAnnotator">20</a>.</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+	
+<img src="figures/TreeAnnotator.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 20: Using TreeAnnotator to summarise the tree set.</td></tr>
+</table></div>
+ 
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>The burnin is the number of trees to remove from the start of the sample. Unlike <span style="font-weight:bold">Tracer</span> which specifies the number of steps as a burnin, in <span style="font-weight:bold">TreeAnnotator</span> you need to specify the actual number of trees. For this run, we use the default setting 0.</p><p>The <span style="font-weight:bold">Posterior probability limit</span> option specifies a limit such that if a node is found at less than this frequency in the sample of trees (i.e., has a posterior probability less than this limit), it will not be annotated. 
+Set this to 0 to annotate all nodes.</p><p>For <span style="font-weight:bold">Target tree type</span> you can either choose a specific tree from a file or ask TreeAnnotator to find a tree in your sample. The default option, <span style="font-weight:bold">Maximum clade credibility tree</span>, finds the tree with the highest product of the posterior probability of all its nodes.</p><p>Choose <span style="font-weight:bold">Mean heights</span> for node heights. This sets the heights (ages) of each node in the tree to the mean height across the entire sample of trees for that clade.</p><p>For the input file, select the trees file that BEAST created (by default this will be called <span style="font-family:monospace">location_tree_with_trait.tree</span>s) and select a file for the output (here we called it <span style="font-family:monospace">location_tree_with_trait.tree</span>).</p><p>Now press <span style="font-family:monospace">Run</span> and wait for the program to finish.</p><!--TOC subsection id=sec18 Distribution of root location-->
+<h3 id="sec18" class="subsection">Distribution of root location</h3><!--SEC END --><p>When you open the summary tree <span style="font-family:monospace">location_tree_with_trait.tree</span> in a text editor, and look at the end of the tree definition, grab the last entry for location.set and location.set.prob. They might look something like this:
+<br>
+<span style="font-family:monospace">location.set = {"Hunan","Guangxi","Fujian","HongKong","Guangdong"}
+location.set.prob = {0.024983344437041973, 0.16822118587608262, 0.05463024650233178, 0.6085942704863424, 0.1435709526982012}
+</span></p><p>This means that we have the following distribution for the root location:</p><table border=1  style="border-spacing:0;" class="cellpadding1"><tr><td style="text-align:left;border:solid 1px;white-space:nowrap" >location</td><td style="text-align:left;border:solid 1px;white-space:nowrap" >probability</td></tr>
+<tr><td style="text-align:left;border:solid 1px;white-space:nowrap" >Hunan</td><td style="text-align:left;border:solid 1px;white-space:nowrap" >0.024983344437041973</td></tr>
+<tr><td style="text-align:left;border:solid 1px;white-space:nowrap" >Guangxi</td><td style="text-align:left;border:solid 1px;white-space:nowrap" >0.16822118587608262</td></tr>
+<tr><td style="text-align:left;border:solid 1px;white-space:nowrap" >Fujian</td><td style="text-align:left;border:solid 1px;white-space:nowrap" >0.05463024650233178</td></tr>
+<tr><td style="text-align:left;border:solid 1px;white-space:nowrap" >HongKong</td><td style="text-align:left;border:solid 1px;white-space:nowrap" >0.6085942704863424</td></tr>
+<tr><td style="text-align:left;border:solid 1px;white-space:nowrap" >Guangdong</td><td style="text-align:left;border:solid 1px;white-space:nowrap" >0.1435709526982012</td></tr>
+</table><p>This distribution shows that the 95% HPD consists of all locations except Hunan, with a 
+strong indication that Hong-Kong might be the root with over 60% probability. It is quite
+typical that a lot of locations are part of the 95% HPD in discrete phylogeography.</p><!--TOC subsection id=sec19 Viewing the Location Tree-->
+<h3 id="sec19" class="subsection">Viewing the Location Tree</h3><!--SEC END --><p>We can look at the tree in another program called <span style="font-weight:bold">FigTree</span>. Run this program, and open
+the <span style="font-family:monospace">location_tree_with_trait.tree</span> file by using the <span style="font-family:monospace">Open</span> command in the <span style="font-family:monospace">File</span> menu. The tree should appear.
+You can now try selecting some of the options in the control panel on the left. Try selecting
+<span style="font-weight:bold">Appearance</span> to get colour on the branches by location. Also, you can set the branch width
+according to posterior support. You should end up with something like Figure <a href="#fig.figtree">21</a>.</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+<img src="figures/figtree.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 21: Figtree representation of the summary tree. Branch colours represent location
+and branch widths posterior support for the branch.</td></tr>
+</table></div>
+ 
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>Alternatively, you can load the species tree set (note this is NOT the summary tree, but the complete set) into DensiTree and set it up as follows.</p><ul class="itemize"><li class="li-itemize">
+Set burn-in to 300. The tree should not be collapsed any more.
+</li><li class="li-itemize">Show a root-canal tree to guide the eye. 
+</li><li class="li-itemize">Show a grid, and play with the grid options to only show lines at 2 year intervals covering round numbers (that is, 2000, instead of 2001.22).
+</li></ul><p>The image should look something like Figure <a href="#fig.DensiTree">22</a>.</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+<img src="figures/DensiTree.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 22: DensiTree representation of the species tree.</td></tr>
+</table></div>
+ 
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>You can colour branches by location to get something like Figure <a href="#fig.DensiTree2">24</a>.</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+<img src="figures/DensiTree2.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 23: DensiTree with branches coloured by location.</td></tr>
+</table></div>
+ 
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><!--TOC subsection id=sec20 Post processing geography-->
+<h3 id="sec20" class="subsection">Post processing geography</h3><!--SEC END --><p>Start spread by double clicking the spread.jar file.</p><p>Select the &#X2019;Open&#X2019; button in the panel under &#X2019;Load tree file&#X2019;, and select the summary tree file.</p><p>Change the &#X2019;State attribute name&#X2019; to the name of the trait. We used &#X2019;location&#X2019; so change it to location.</p><p>Click the set-up button. A dialog pops up where you can edit altitude and longitude for the locations. 
+Alternatively, you can load it from a tab-delimited file. A file named H5N1locations.dat is prepared already.</p><p><span style="font-weight:bold">Tip:</span> to find latitude and longitude of locations, you can 
+use google maps, switch on photo&#X2019;s and select a photo at the location 
+of the map. Click the photo, then click &#X2019;Show in Panoramio&#X2019; and a 
+new page opens that contains the locations where the photo was taken.
+An alternative is to use google-earth, and point the mouse to the 
+location. Google earth shows latitude and longitude of the mouse 
+location at the bottom of the screen.</p><p>Now, open the &#X2019;Output&#X2019; tab in the panel on the left hand side. Here, you can choose where to save the KML file (default <span style="font-family:monospace">output.kml</span>).</p><p>Select the &#X2018;generate&#X2019; button to generate the KML file, and a world map appears with the tree superimposed onto the area where the rabies epidemic occurred.</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+<img src="figures/spread.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 24: A world map appears with the tree superimposed onto the area</td></tr>
+</table></div>
+ 
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><p>The KML file can be read into google earth. Here, the spread of the epidemic can be animated through time. The coloured areas represent the 95% HPD regions of the locations of the internal nodes of the summary tree.</p><blockquote class="figure"><div class="center"><div class="center"><hr style="width:80%;height:2"></div>
+<img src="figures/google-earth0.hevea.png">
+<img src="figures/google-earth1.hevea.png">
+<img src="figures/google-earth2.hevea.png">
+<div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 25: Google earth used to animate the KML file</td></tr>
+</table></div>
+
+<div class="center"><hr style="width:80%;height:2"></div></div></blockquote><!--TOC section id=sec21 References-->
+<h2 id="sec21" class="section">References</h2><!--SEC END --><dl class="thebibliography"><dt class="dt-thebibliography">
+<a id="Lemey:2009uq">[Lemey etal., 2009]</a></dt><dd class="dd-thebibliography">
+Lemey, P., Rambaut, A., Drummond, A.&#XA0;J. and Suchard, M.&#XA0;A. (2009).
+Bayesian phylogeography finds its roots.
+PLoS Comput Biol  <em>5</em>, e1000520.</dd><dt class="dt-thebibliography"><a id="wallace:2007st">[Wallace etal., 2007]</a></dt><dd class="dd-thebibliography">
+Wallace, R., HoDac, H., Lathrop, R. and Fitch, W. (2007).
+A statistical phylogeography of influenza A H5N1.
+Proceedings of the National Academy of Sciences  <em>104</em>,
+4473.</dd></dl><!--CUT END -->
+<!--HTMLFOOT-->
+<!--ENDHTML-->
+<!--FOOTER-->
+<hr style="height:2"><blockquote class="quote"><em>This document was translated from L<sup>A</sup>T<sub>E</sub>X by
+</em><a href="http://hevea.inria.fr/index.html"><em>H</em><em><span style="font-size:small"><sup>E</sup></span></em><em>V</em><em><span style="font-size:small"><sup>E</sup></span></em><em>A</em></a><em>.</em></blockquote></div></body>
+</html>
