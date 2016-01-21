@@ -12,7 +12,7 @@
 \setlength{\parskip}{.1in}
 \usepackage[T1]{fontenc}
 \usepackage[round]{natbib}
-\bibliographystyle{../../bst/sysbio}
+\bibliographystyle{sysbio}
 \usepackage[fleqn]{amsmath}
 \usepackage{amssymb}
 \usepackage{xspace}
@@ -33,7 +33,7 @@
 \fancyhf{} % clear all headers and footers
 \fancyhead[RO,LE]{Species Delimitation in a SNAPP Tutorial}
 % \fancyhead[RO,LE]{2012}
-\fancyfoot[LO,LE]{\footnotesize 2015 Adelaide, Australia.}
+\fancyfoot[LO,LE]{\footnotesize Bioinformatics, 2015 Adelaide, Australia.}
 \fancyfoot[CE,CO]{}
 \fancyfoot[RO,RE]{\thepage}
 \renewcommand{\footrulewidth}{0.5pt}
@@ -70,7 +70,10 @@ A Tutorial and Worked Example}\\
 Adam Leach\'e\\
 Department of Biology\\
 University of Washington\\
-April 2015
+\\
+Remco Bouckaert\\
+University of Auckland \& Max Planck Institute for the Science of Human History\\
+November 2015\\
 {\singlespacing \tableofcontents}
 \newpage
 %###########################################################################################
@@ -81,7 +84,7 @@ We will use example SNP data for geckos (genus \textit{Hemidactylus}) and the so
 We will work through the steps necessary for setting up the required packages on your computer, setting up the XML file, and testing species delimitation models using marginal likelihood estimation and Bayes factors.  
 
 \section{Version, Author information, and Acknowledgements}
-This tutorial was written by Adam Leach\'e for \beast version 2.1.2. Remco Bouckaert helped troubleshoot the tutorial.
+This tutorial was written by Adam Leach\'e for \beast version 2.1.2 and updated by Remco Bouckaert for \beast version 2.3.1.
 The layout of the tutorial is a modified version of a divergence time tutorial written by Jamie Oaks \href{https://github.com/joaks1}{\url{(https://github.com/joaks1)}}, which he borrowed from Tracy Heath. 
 A similar \href{http://www.beast2.org/wiki/index.php/BFD*}{tutorial} is provided at the \beast website. This work is licensed under a \href{http://creativecommons.org/licenses/by/4.0/deed.en_US}{Creative Commons Attribution 4.0 International License.}
 
@@ -97,8 +100,8 @@ We will be using the free, open-source software package, \beast (Bayesian
 Evolutionary Analysis Sampling Trees;
 \href{http://beast2.org}{\url{http://beast2.org}}), for
 estimating species trees.
-For this tutorial, you will need to use \beast version 2.1 or better. 
-The distribution comes with the \program{BEAUTi}, which you will use to manage package plugins (also called add-ons), including \program{SNAPP}.
+For this tutorial, you will need to use \beast version 2.3.1 or better. 
+The distribution comes with the \program{BEAUTi}, which you will use to manage packages (also called add-ons or plugins), including \program{SNAPP}.
 
 \program{BEAST} comes with several other utility programs that we will use to prepare 
 input files (\program{BEAUTi}; Bayesian Evolutionary Analysis
@@ -111,13 +114,13 @@ for evaluating, summarizing, and viewing results.
 
 \section{The Data}
 We will be analyzing SNP data for geckos in the \textit{Hemidactylus fasciatus} species complex. Details on how the data were collected are 
-provided in \citep{Leache14}. For this tutorial, we will use a data matrix containing 129 SNPs that is also available for download on \href{http://datadryad.org/resource/doi:10.5061/dryad.r55fb}{Dryad}. Allopatric divergence seems to be the primary mechanism causing speciation in this group. These geckos are restricted to rainforest habitats, and their distributions match those of the major blocks of rainforest in West and Central Africa (Figure \ref{fig:map}). 
+provided in \citep{Leache14}. For this tutorial, we will use a data matrix containing 129 SNPs that is also available for download on \href{http://datadryad.org/resource/doi:10.5061/dryad.r55fb}{Dryad} (also part of the zip file containing this tutorial). Allopatric divergence seems to be the primary mechanism causing speciation in this group. These geckos are restricted to rainforest habitats, and their distributions match those of the major blocks of rainforest in West and Central Africa (Figure \ref{fig:map}). 
 
 For the species delimitation example, we will test species delimitation models based on historical connections between adjacent rainforest blocks. These models differ in the number of species, and how samples are assigned to species. The base model has four species (Figure \ref{fig:map}a). The alternative models are grouped into three classes: (1) lumping: populations are collapsed into the same species, (2) splitting: populations are partitioned into separate species, (3) reassigning: population(s) are allocated into a different species.
 
     \begin{figure}[htbp]
         \centering
-        \fbox{\includegraphics[width=0.8\textwidth]{../../images/map.png}}
+        \fbox{\includegraphics[width=0.8\textwidth]{../images/map.png}}
         \caption{Geographic sampling of geckos (numbers in symbols indicate sample sizes). Starting taxonomy is shown in (a). BFD* is used to test the alternative species delimitation models outlined in (b) -- (g).}
         \label{fig:map}
     \end{figure}
@@ -139,11 +142,11 @@ For the species delimitation example, we will test species delimitation models b
 \section{Additional Information/Resources}
 Other resources for species delimitation in *BEAST include a
 \href{http://beast2.org}{tutorial} provided at the \beast website.  
-Another Bayes factor species delimitation tutorial is included in 
-the species tree estimation tutorial available at the author's \href{http://faculty.washington.edu/leache/wordpress/}{website}. 
+%RRB: could not find this tutorial:
+%Another Bayes factor species delimitation tutorial is included in the species tree estimation tutorial available at the author's \href{http://faculty.washington.edu/leache/wordpress/}{website}. 
 
 \newpage
-\bibliography{../../bib/references}
+\bibliography{references}
 
 \end{document}
 

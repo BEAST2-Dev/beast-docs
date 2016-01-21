@@ -1,16 +1,15 @@
 \intermediate{\subsection{Downloads and Data}}
 
-\step{Download and data.}{
+\step{Download and data.}{\footnote{\label{foot.done}Already done at the Bioinformatics 2015 workshop.}
     Download \program{BEAST} from \href{http://beast2.org}{\url{http://beast2.org}} and install it on your computer.
-    This tutorial is written for the Mac OS X version of \program{BEAST}v2.1.2.
+    This tutorial is written for the Mac OS X version of \program{BEAST}v2.3.1.
     
-    You will be using \program{BEAST} to run \program{SNAPP}, although it is possible to run \program{SNAPP} on it's own. However, we 
-    have to use \program{BEAST} in order to combine \program{SNAPP} and marginal likelihood estimation into the same analytical framework. 
-    Thus, without \program{BEAST} we would not be able to conduct Bayes factor delimitation of species with \program{SNAPP}.
+    You will be using \program{BEAST} to run \program{SNAPP}. %RRB: highly discouraged now:, although it is possible to run \program{SNAPP} on it's own. 
+    We  have to use \program{BEAST} in order to combine \program{SNAPP} and marginal likelihood estimation into the same analytical framework. 
     
     }
 
-\step{Data included with the tutorial.}{
+\step{Data included with the tutorial.}{\hspace{-2.5mm}$^1$ %${}^\ref{foot.done}$
    After downloading and unzipping this archive you should have a BFD*-tutorial folder on your computer. This tutorial
     contains the files and folders shown in
     Box~\ref{box:tutorialDir}. The \menutab{data} folder contains the gecko SNP data in binary format (necessary for \program{SNAPP}). If you are unsure of how to convert your own
@@ -52,7 +51,15 @@
 
 \step{Launch BEAUTi}{Begin by launching the \program{BEAUTi} program that comes with \program{BEAST}. If you
     are using Mac OSX or Windows, you should be able to do this by double
-    clicking on the application. If everything is working correctly, a window
+    clicking on the application. On Linux, use the following command from a terminal:
+    
+    	    \cmd{/path/to/BEASTv2.3.1/bin/beauti}
+	    
+	    or
+	    
+	    \cmd{beauti}
+    
+    If everything is working correctly, a window
     should appear that looks something like Figure~\ref{fig:beautiInit}.
     \begin{figure}[htbp]
         \centering
@@ -62,7 +69,8 @@
     \end{figure}
 }
 
-\step{Install SNAPP and model selection packages}{We need to add functionality to \program{BEAST} in order to estimate 
+\step{Install SNAPP and model selection packages}{\hspace{-2.5mm}$^1$ %${}^\ref{foot.done}$ 
+    We need to add functionality to \program{BEAST} in order to estimate 
      species trees with SNP data and 
      to perform model selection. Begin by using the drop-down 
      menu \subItem{File}{Manage Packages.} A window should 
@@ -81,7 +89,7 @@
 \step{Converting \program{BEAUTi} to \program{SNAPP} mode}{We need to tell \program{BEAUTi} that we are 
      setting up a \program{SNAPP} analysis, which will change the menu options and allow us to import SNP data.
      Begin by using the drop-down 
-     menu \subItem{File}{Template, SNAPP}. This should change the appearance of the \program{BEAUTi} 
+     menu \subItem{File}{Template, SNAPP.} This should change the appearance of the \program{BEAUTi} 
      window to look something like Figure~\ref{fig:beauti-snapp}.
 
     \begin{figure}[htbp]
@@ -96,7 +104,7 @@
 
 \step{Import the SNP data.}{
     Import the SNP data (the {\bf hemi129.nex} file)
-    using the drop-down menu \subItem{File}{Import Alignment.}
+    using the drop-down menu \subItem{File}{Add Alignment.}
 
     Once the data are successfully loaded into \program{BEAUTi} you should see a list of the 
     samples included in the data file (Figure~\ref{fig:beauti-data-imported}.)
@@ -145,7 +153,7 @@
 
 \step{Set the mutation model.}{
     Next, we need to set up our model under the \menutab{Mutation Model} tab Figure~\ref{fig:beauti-mutation}.
-    We will use the default options for this tutorial, but you should read the documentation \href{http://www.beast2.org/wiki/index.php/SNAPP}{A rough guide to SNAPP} to learn more about the model options. Briefly, the parameters are as follows:
+    You should read the documentation \href{http://www.beast2.org/wiki/index.php/SNAPP}{A rough guide to SNAPP} to learn more about the model options. Briefly, the parameters are as follows:
 
 \small{
     \begin{compactdesc}
@@ -164,11 +172,13 @@
     
     The ``Use Log Likelihood Correction'' checkbox is for calculating corrected likelihood values for Bayes factor test of different species assignments.
         
+	Click the 'Calc mutation rates' button to get an empirical estimate of the U and V mutation rates. For this tutorial, we will not estimate these rates, so uncheck the 'Sample' box next to Mutation Rate U.
+
     }
     
         \begin{figure}[htbp]
         \centering
-        \fbox{\includegraphics[width=0.8\textwidth]{../screenshots/beauti-mutation.png}}
+        {\includegraphics[width=0.8\textwidth]{../screenshots/beauti-mutation.png}}
         \caption{The Mutation Model options.}
         \label{fig:beauti-mutation}
     \end{figure}
@@ -191,6 +201,8 @@
        \item[\field{Lambda: Birth rate for the Yule model prior on the species tree.}]
        \item[\field{Rateprior: prior on rates can be Gamma, InverseGamma, CIR, or Uniform.}]
     \end{compactdesc}
+    
+	For this tutorial, we will not estimate $\lambda$, so uncheck the box next to 'Sample' on the entry for Lambda. The lambda prior will now disappear.
 }
     
     \begin{figure}[htbp]
@@ -236,6 +248,39 @@
     Save the file to
     the \localfile{BFD*-tutorial} folder.\\
     }
+
+
+\intermediate{\subsection{Running the stepping stone analysis with \program{BEAST}}}
+
+\step{Marginal likelihood estimation by GUI.}{
+There are two ways to set up the stepping stone analysis; through a GUI, and by editing the XML. The GUI is more convenient but makes it a bit harder to transfer the analysis to a cluster, and since stepping stone analyses are typically very computational intensive, it often makes sense to run them on a cluster. In this step, we explain how to set up the analysis using the GUI, and in the next two steps it is explained how to set up an XML file through a text editor.
+
+First, start the BEAST app-store using the command
+
+    	    \cmd{/path/to/BEASTv2.3.1/bin/appstore}
+	    
+	    or
+	    
+	    \cmd{appstore}
+
+A window similar to Figure~\ref{fig:appstore} should pop up.
+
+    \begin{figure}[htbp]
+        \centering
+        {\includegraphics[width=0.6\textwidth]{../screenshots/appstore}}
+        \caption{BEAST app store.}
+        \label{fig:appstore}
+    \end{figure}
+
+Select the Path sampler icon, and hit the Launch button. A new window pops up with the GUI for path sampling/stepping stone analysis similar to Figure~\ref{fig:pathsampler}. Select the file with MCMC analysis you just set up in BEAUti, and change the settings as indicated in Figure~\ref{fig:pathsampler}.
+
+    \begin{figure}[htbp]
+        \centering
+        {\includegraphics[width=0.7\textwidth]{../screenshots/pathsampler}}
+        \caption{GUI for path sampling/stepping stone analysis.}
+        \label{fig:pathsampler}
+    \end{figure}
+}
 
 \intermediate{\subsection{Editing the XML file for marginal likelihood estimation}}
 
@@ -298,7 +343,7 @@ Finally, move the entire {\bf ``stateDistribution''} element to just before the 
 	    You can also run \program{BEAST} from the command line. Open the {\bf Terminal} Application and navigate to the folder 
 	    containing your {\bf runA.xml} file. To execute the file, type the following at the command line:
 	    
-	    \cmd{/path/to/BEASTv2.1.2/bin/beast -threads 8 runA.xml}
+	    \cmd{/path/to/BEASTv2.3.1/bin/beast -threads 8 runA.xml}
 	    
 	    or
 	    
@@ -352,11 +397,13 @@ XML files containing the species assignments shown in Figure \ref{fig:map} are p
    After you run each of the alternative species delimitation models you can rank them by their marginal likelihood estimate (MLE). You 
    can also calculate Bayes factors to compare the models. 
    The Bayes factor (BF) is a model selection tool that is simple and well suited for the purposes of comparing species delimitation models. 
-   Calculating the BF between models is simple. To do so, simply subtract the MLE values for two models, and then multiply the difference by two (BF = 2 x (model1 - model2). A negative BF value indicates support in favor of model 1. A positive BF value indicates support in favor of model 2. 
+   Calculating the natural logarithm of the BF (ln BF) between models is simple. To do so, simply subtract the ln MLE values for two models (ln BF = (ln MLE(model1 ) - ln MLE(model2)). A negative BF value indicates support in favor of model 1. A positive BF value indicates support in favor of model 2. 
+   
+{\bf Note} that the ln MLE values are provided directly by the stepping stone analysis, but the natural logarithms bit 'ln' is typically not mentioned but implicitly assumed. Likewise, BF often stands for ln BF, and in the remained, we will drop the ln for MLE and BF.
 
 The strength of support from BF comparisons of competing models can be evaluated using the framework of \cite{kass95}. 
  The BF scale is as follows: 
-0 < BF < 2 is not worth more than a bare mention, 2 < BF < 6 is positive evidence, 6 < BF < 10 is strong support, and BF > 10 is decisive.
+0 < BF < 1.1 is not worth more than a bare mention, 1.1 < BF < 3 is positive evidence, 3 < BF < 5 is strong support, and BF > 5 is decisive.
 
 The results for the seven gecko models are provided in Table 1. The model that splits \textit{Hemidactylus eniangii} into two species (runF) is the top-ranked model. It has the largest MLE value, and it is supported in favor of the current taxonomy model (runA). The BF in support for model F is decisive compared to model A. 
 
@@ -365,14 +412,14 @@ Table 1: Path sampling results for the seven species delimitation models shown i
 \tabcolsep=0.2cm
 \begin{tabular}{l c c c c } 
 \hline     
-Model 							& Species 	& MLE 	& Rank 	& BF\\\hline
+Model 							& Species 	&  MLE 	& Rank 	& BF\\\hline
 runA, current taxonomy				& 4 			& -1673.4 	& 2		& -- \\
-runB, lump western forests			& 3 			& -1724.2 	& 5		& +101.5\\
-runC, lump central forests				& 3 			& -1788.0 	& 6		& +229.2\\
-runD, lump western \& central forests	& 2 			& -1842.9 	& 7		& +339.0\\
-runE, split \textit{fasciatus}			& 5 			& -1713.2 	& 4		& +79.7\\
-runF, split \textit{eniangii} 				& 5 			& -1625.9 	& 1		& -95.1 \\
-runG, reassign Bioko Island			& 4 			& -1712.6 	& 3 		& +78.4\\\hline
+runB, lump western forests			& 3 			& -1724.2 	& 5		& +50.8\\
+runC, lump central forests				& 3 			& -1788.0 	& 6		& +114.6\\
+runD, lump western \& central forests	& 2 			& -1842.9 	& 7		& +169.5\\
+runE, split \textit{fasciatus}			& 5 			& -1713.2 	& 4		& +39.8\\
+runF, split \textit{eniangii} 				& 5 			& -1625.9 	& 1		& -47.5 \\
+runG, reassign Bioko Island			& 4 			& -1712.6 	& 3 		& +39.2\\\hline
 \end{tabular}\\
 MLE = Marginal likelihood estimate\\
 BF = Bayes factor\\
@@ -403,6 +450,7 @@ TreeAnnotator will summarize the posterior distribution of species trees and ide
     Check the \field{Node Bars} option and select
     \fieldvalue{height\_95\%\_HPD} for the \subItem{Node bars}{Display} field.
     
+    Alternatively, start DensiTree (it is part of the BEAST distribution, so just double click the icon in OSX or Windows or use the \cmd{densitree} command in Linux) and read in the \localfile{runA.trees} file representing the posterior distribution. By selecting population size for branch widths, population sizes throughout the tree can be visualised.
 }
 
 
