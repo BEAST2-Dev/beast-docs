@@ -286,7 +286,7 @@ Number of species 	& 5	& 1283 	& 257 	& 128 	& 26 		& 13 		& 6\\
 
 \intermediate{\subsection{Running the stepping stone analysis with \program{BEAST}}}
 
-\step{ Marginal likelihood estimation by GUI.}{
+\step{Setting up for marginal likelihood estimation.}{
 There are two ways to set up the stepping stone analysis; through a GUI, and by editing the XML. The GUI is more convenient but makes it a bit harder to transfer the analysis to a cluster, and since stepping stone analyses are typically very computational intensive, it often makes sense to run them on a cluster. In this step, we explain how to set up the analysis using the GUI, and in the next two steps it is explained how to set up an XML file through a text editor.
 
 First, start the BEAST app-store by selecting the File/Launch apps menu in BEAUti (alternatively, double click the AppStore icon in the BEAST folder). A window similar to Figure~\ref{fig:appstore} should pop up.
@@ -316,7 +316,7 @@ Select the file with MCMC analysis you just set up in BEAUti, and change the set
 
 %\intermediate{\subsection{Editing the XML file for marginal likelihood estimation}}
 
-{\bf Step 11b} {Editing the XML file for marginal likelihood estimation.}{
+{\bf Step 11b}{Editing the XML file for marginal likelihood estimation.}
 Species delimitation using SNPs requires marginal likelihood estimation. 
 You will need to edit the XML file to prepare it for analysis in \program{BEAST}. Instructions for setting up
 marginal likelihood estimation using path sampling are provided at the \href{http://www.beast2.org/tutorials}{BEAST} website. The procedure involves (1) typing in some short codes in a few places, (2) replacing some words, and (3) copying and pasting some sections around. Specific instructions are below:
