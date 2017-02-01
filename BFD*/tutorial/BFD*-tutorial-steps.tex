@@ -1,19 +1,19 @@
-\intermediate{\subsection{Downloads and Data}}
+\intermediate{\subsection{Downloading the programs}}
 
-\step{Download and data.}{\footnote{\label{foot.done}Already done at the Bioinformatics 2015 workshop.}
+\step{Downloading the programs.}{
     Download \program{BEAST} from \href{http://beast2.org}{\url{http://beast2.org}} and install it on your computer.
-    This tutorial is written for the Mac OS X version of \program{BEAST}v2.3.1.
+    This tutorial is written for the Mac OS X version of \program{BEAST}v2.4.1.
     
-    You will be using \program{BEAST} to run \program{SNAPP}. %RRB: highly discouraged now:, although it is possible to run \program{SNAPP} on it's own. 
-    We  have to use \program{BEAST} in order to combine \program{SNAPP} and marginal likelihood estimation into the same analytical framework. 
-    
+    You will be using \program{BEAST} to run \program{SNAPP}, although it is possible to run \program{SNAPP} on its own. However, you 
+    have to use \program{BEAST} in order to combine \program{SNAPP} and marginal likelihood estimation into the same analytical framework. 
+    Thus, without \program{BEAST} you would not be able to conduct species delimitation with \program{SNAPP}.
     }
 
-\step{Data included with the tutorial.}{\hspace{-2.5mm}$^1$ %${}^\ref{foot.done}$
+\step{Data included with the tutorial.}{
    After downloading and unzipping this archive you should have a BFD*-tutorial folder on your computer. This tutorial
     contains the files and folders shown in
     Box~\ref{box:tutorialDir}. The \menutab{data} folder contains the gecko SNP data in binary format (necessary for \program{SNAPP}). If you are unsure of how to convert your own
-    SNP data from nucleotide to binary format, please read the documentation \href{http://www.beast2.org/wiki/index.php/SNAPP}{A rough guide to SNAPP} (Section 4. Preparing Input File). You can find scripts for converting SNP data into \program{SNAPP} input format at our phrynomics project site at \href{https://github.com/bbanbury/phrynomics}{GitHub}. You can also find help
+    SNP data from nucleotide to binary format, please read the documentation \href{http://beast2.org/tutorials/}{A rough guide to SNAPP} (Section 4. Preparing Input File). You can find scripts for converting SNP data into \program{SNAPP} input format at our phrynomics project site at \href{https://github.com/bbanbury/phrynomics}{GitHub}. You can also find help
     at the \program{BEAST} \href{https://groups.google.com/forum/?fromgroups\#!forum/beast-users}{google users group}.
     The \menutab{xml} folder contains seven xml files (named according to the species delimitation models in Figure~\ref{fig:map}) that are ready to run in \program{BEAST}. 
 
@@ -51,15 +51,7 @@
 
 \step{Launch BEAUTi}{Begin by launching the \program{BEAUTi} program that comes with \program{BEAST}. If you
     are using Mac OSX or Windows, you should be able to do this by double
-    clicking on the application. On Linux, use the following command from a terminal:
-    
-    	    \cmd{/path/to/BEASTv2.3.1/bin/beauti}
-	    
-	    or
-	    
-	    \cmd{beauti}
-    
-    If everything is working correctly, a window
+    clicking on the application. If everything is working correctly, a window
     should appear that looks something like Figure~\ref{fig:beautiInit}.
     \begin{figure}[htbp]
         \centering
@@ -69,8 +61,7 @@
     \end{figure}
 }
 
-\step{Install SNAPP and model selection packages}{\hspace{-2.5mm}$^1$ %${}^\ref{foot.done}$ 
-    We need to add functionality to \program{BEAST} in order to estimate 
+\step{Install SNAPP and model selection packages}{You need to add functionality to \program{BEAST} in order to estimate 
      species trees with SNP data and 
      to perform model selection. Begin by using the drop-down 
      menu \subItem{File}{Manage Packages.} A window should 
@@ -86,10 +77,11 @@
 
 }
 
-\step{Converting \program{BEAUTi} to \program{SNAPP} mode}{We need to tell \program{BEAUTi} that we are 
+\step{Converting \program{BEAUTi} to \program{SNAPP} mode}{Tell \program{BEAUTi} that you are  
      setting up a \program{SNAPP} analysis, which will change the menu options and allow us to import SNP data.
      Begin by using the drop-down 
-     menu \subItem{File}{Template, SNAPP.} This should change the appearance of the \program{BEAUTi} 
+     menu \subItem{File}{Template, SNAPP.} 
+     This should change the appearance of the \program{BEAUTi} 
      window to look something like Figure~\ref{fig:beauti-snapp}.
 
     \begin{figure}[htbp]
@@ -104,7 +96,7 @@
 
 \step{Import the SNP data.}{
     Import the SNP data (the {\bf hemi129.nex} file)
-    using the drop-down menu \subItem{File}{Add Alignment.}
+    using the drop-down menu \subItem{File}{Import Alignment.}
 
     Once the data are successfully loaded into \program{BEAUTi} you should see a list of the 
     samples included in the data file (Figure~\ref{fig:beauti-data-imported}.)
@@ -118,10 +110,10 @@
 }
 
 \step{Define species.}{
-    There are several ways to designate species assignments. We automatically 
-    designated species names using the names already 
+    There are several ways to designate species assignments. You can automatically 
+    designate species names using the names already 
     present in the data files. The species names can be pre-defined this way by including a ``delimiter'' that 
-    allows the species name to be separated from the rest of the sequence name. The gecko data 
+    allows the species name to be parsed from the rest of the sequence name. The gecko data 
     file uses an underscore ``\_'' to separate
     the species name (on the left) from the rest of the sequence name (on the right) as follows:\\
     \\
@@ -136,8 +128,9 @@
     \cmd{\ldots}\\
     \\
     Other options for assigning species names are available using the ``Guess'' button. The screen should look similar to 
-     Figure~\ref{fig:beauti-guess-trait}. The original data include 46 samples, but the XML files included in this tutorial contain 
-     a reduced number of samples to speed up the analyses.
+     Figure~\ref{fig:beauti-guess-trait}. 
+     
+    How many samples should you include? The number of samples slows down SNAPP much more than the number of SNPs. Therefore, if your analyses are going too slow, then it is typically better to randomly subsample down to an even proportion of sequences from each species instead of removing SNPs. Reducing the number of samples by half will more than half the analysis time. When setting up a new analysis, start with a small number of samples for each species (for example, 4 samples per species), which will enable you to make quicker progress. Increase the number of samples once your analyses are returning reasonable results. If you are overambitious with your sampling, then your analyses will become unbearably slow. 
 
     \begin{figure}[htbp]
         \centering
@@ -152,8 +145,8 @@
 
 
 \step{Set the mutation model.}{
-    Next, we need to set up our model under the \menutab{Mutation Model} tab Figure~\ref{fig:beauti-mutation}.
-    You should read the documentation \href{http://www.beast2.org/wiki/index.php/SNAPP}{A rough guide to SNAPP} to learn more about the model options. Briefly, the parameters are as follows:
+    Next, set up our model under the \menutab{Mutation Model} tab Figure~\ref{fig:beauti-mutation}.
+    Be sure to read the documentation \href{http://www.beast2.org/tutorials}{A rough guide to SNAPP} to learn more about the model options. Briefly, the parameters are as follows:
 
 \small{
     \begin{compactdesc}
@@ -162,23 +155,24 @@
        \item[\field{Coalescence Rate: population size parameter with one value for each node in the tree.}]
     \end{compactdesc}
     
+    \textit{Recommendations:}  Set mutation rates u and v = 1 and do not sample. Alternatively, you can click the {\bf ``Calc mutation rates''} button to get a direct estimate of u and v. Either way, you typically do not have to estimate these parameters during the MCMC. 
+    Coalescent Rate: check the sample box. If you do not sample, then you assume that all population sizes are the same, which is unrealistic. The coalescent rate is 2/theta, and the number is simply the starting value used to initialize the analysis. Do not confuse the coalescent rate with the theta prior. The theta prior is described in detail in the next section.
+    
     The ``Include non-polymorphic'' checkbox is used in cases where invariant sites have been included in the data. The likelihood calculations are 
-    different if \program{SNAPP} assumes that all constant sites have been removed.
+    different if \program{SNAPP} assumes that all constant sites have been removed. If you are using a typical SNP dataset that only includes variable site, then make sure that the box is not checked.
     
     The ``Mutation Only At Root'' checkbox indicates conditioning on zero mutations, except at root (default false). As a result, all gene 
-    trees will coalesce in the root only, and never in any of the branches.
+    trees will coalesce in the root only, and never in any of the branches. This option is allows you to emulate the model used by \citet{nielsen1998} and \citet{roychoudhury2008}.
     
     The ``Show Pattern Likelihoods And Quit'' checkbox is handy if you just want to print out the likelihoods for all patterns in the starting state and then quit.
     
-    The ``Use Log Likelihood Correction'' checkbox is for calculating corrected likelihood values for Bayes factor test of different species assignments.
+    The ``Use Log Likelihood Correction'' checkbox is for calculating corrected likelihood values for Bayes factor test of different species assignments (the calculation is almost instantaneous, and it will not slow down your analysis).
         
-	Click the 'Calc mutation rates' button to get an empirical estimate of the U and V mutation rates. For this tutorial, we will not estimate these rates, so uncheck the 'Sample' box next to Mutation Rate U.
-
     }
     
         \begin{figure}[htbp]
         \centering
-        {\includegraphics[width=0.8\textwidth]{../screenshots/beauti-mutation.png}}
+        \fbox{\includegraphics[width=0.8\textwidth]{../screenshots/beauti-mutation.png}}
         \caption{The Mutation Model options.}
         \label{fig:beauti-mutation}
     \end{figure}
@@ -186,32 +180,75 @@
 
     
 \step{Define the priors.}{
-    Next, we need to move to the \menutab{Prior} tab and specify the priors (Figure~\ref{fig:beauti-prior}.) We will use the 
-    default options for this tutorial, but you should read the 
-    documentation \href{http://www.beast2.org/wiki/index.php/SNAPP}{A rough guide to SNAPP} 
-    to learn more about these options. A short description of the priors are provided below:
-    Briefly, \program{SNAPP} uses a Yule prior for the species tree and branch lengths on the species tree. 
-    This prior has a single parameter, {$\lambda$} (Lambda), which governs the rate that species diverge. This rate, in turn, determines the (prior) 
-    expected height of the species tree. 
+    Next, move to the \menutab{Prior} tab and specify the priors (Figure~\ref{fig:beauti-prior}.) Again, read the 
+    documentation \href{http://www.beast2.org/tutorials}{A rough guide to SNAPP} 
+    to learn more about these priors. It is important to be aware of the biological meaning of these priors. 
+    One problem with \program{SNAPP} is that it is deceptively easy to set up an analysis using default options. 
+    However, setting it up right requires thinking about details that some empiricists would rather not think about.
+
 \small{
     \begin{compactdesc}
        \item[\field{Alpha: shape parameter for the gamma prior on population sizes.}]
-       \item[\field{Beta: scale parameter for the gamma prior on population sizes.}]
+       \item[\field{Beta: rate parameter for the gamma prior on population sizes.}]
        \item[\field{Kappa: parameter used when selecting the CIR rate prior (below).}]
        \item[\field{Lambda: Birth rate for the Yule model prior on the species tree.}]
        \item[\field{Rateprior: prior on rates can be Gamma, InverseGamma, CIR, or Uniform.}]
     \end{compactdesc}
-    
-	For this tutorial, we will not estimate $\lambda$, so uncheck the box next to 'Sample' on the entry for Lambda. The lambda prior will now disappear.
 }
+
+\textit{Setting the expected divergence (theta) prior.} Recall that for a diploid population, theta = 4Nu, where N is the effective population size and u is the per-generation mutation rate. If theta=0.004, you expect to observe 0.4\% variation between two randomly sampled alleles in a population. Another way to think about this is in the expected number of substitutions; ``theta=0.004'' means that for two randomly sampled individuals within a population you expect to observe 4 SNPs in 1,000 bases. In \program{BEAUTi}, the gamma prior on theta is parameterized such that the mean is alpha/beta. For example, if alpha=1 and beta = 250, the prior mean on theta is 0.004. One way of estimating a reasonable mean for the theta prior is to calculate pairwise sequence divergence among all individuals known to belong to a single species and take the average value as the mean for theta. Higher prior means on theta will favor models with populations grouped together, because they represent an expectation that average divergence within populations is relatively high. Users can select different distributions for the theta prior under ``Rateprior''. If ``Rateprior'' is set to ``gamma'' (recommended), the mean value of theta is calculated as alpha/beta.  Note that in some implementations (including the R function rgamma() and Beauti's internal visualizer), the mean of a gamma distribution is calculated as alpha*beta rather than alpha/beta. This is the case for the Lambda prior (discussed below). Finally, kappa is a parameter that is only applied when the CIR distribution is used (see the Rough Guide to SNAPP for further details). 
+
+\textit{Setting the speciation rate prior Lambda:} \program{SNAPP} uses a Yule prior for the species tree and branch lengths on the species tree. This prior has a single parameter, {$\lambda$} (Lambda), representing the speciation rate. This rate, in turn, determines the (prior) expected height of the species tree. The higher the speciation rate, the higher the probability of supporting more species during species delimitation. The trees that come out of SNAPP are not time calibrated. The branch lengths should be interpreted in units of expected substitutions per site. Translating this into time requires an assumption about the substitution rate. Two different options for setting lambda are compared in this tutorial: using a fixed value versus assigning a broad prior. In general, tree height estimates are similar using either a fixed lambda (lambda = 5) or a gamma distribution (2, 200), as shown below. The mean of the gamma distribution for Lambda is calculated as alpha*beta rather than alpha/beta as it is for theta. 
+
+     \begin{figure}[htbp]
+        \centering
+        \fbox{\includegraphics[width=0.8\textwidth]{../screenshots/lambda_comparision.png}}
+        \caption{Tree height comparison of analyses using a fixed lambda (lambda = 5) versus a hyperprior on lambda (gamma {$\sim$} 2,200). The plot shows the marginal probability distributions superimposed for the two estimates, which overlap broadly suggesting that the estimates are quite similar.}
+        \label{fig:lambda_comparision}
+    \end{figure}  
+    
+    
+\textit{Fixed value for Lambda}: The specific prior that you use for {$\lambda$} (Lambda) depends on the number of species in your analysis and the depth of your tree in units of expected substitutions per site. See the Rough Guide to SNAPP for further details and an equation for calculating Lambda. Using a useful script written by Jamie Oaks, called \href{https://github.com/joaks1/pyule}{pyule}, you can calculate an appropriate lambda value based on prior information about the number of species, and the height of the species tree in expected substitutions per site. If sequence data are available, then you can approximate the height of the species tree obtained by calculating the maximum observed divergence between any pair of taxa divided by two (height = max divergence/2). 
+   \newpage
+Table 1 provides some suggestions for Lambda priors across a range of expected substitutions per site from root to tip (up to 20\% sequence divergence from root to any tip), and for relatively small species trees (up to 20 species). In general, different Lambda settings do not influence the results, since in most cases the data will dominate. 
+
+Table 1: Lambda prior settings across a range of species tree heights (in expected substitutions per site) and sizes (number of species).
+\begin{table}[ht]
+\tabcolsep=0.4cm
+\begin{tabular}{rrcccccc}
+\hline
+        &    & \multicolumn{6}{c}{Species tree height (expected substitutions per site)}     \\
+        				&    	& 0.001 	& 0.005 	& 0.01 	& 0.05  	& 0.10 	&0.2\\
+        				&    	&  (0.1\%)	&  (0.5\%) &  (1\%) 	&  (5\%)  	& (10\%)  	& (20\%)\\ \hline
+        				& 2 	& 500	& 100 	& 50 		& 10 		& 5 		& 0.2\\
+Number of species 	& 5	& 1283 	& 257 	& 128 	& 26 		& 13 		& 6\\
+        				& 10	& 1928 	& 386 	& 193 	& 39 		& 19 		& 10\\
+        				& 15	&  2318	&  464	&  232	& 46		& 23		& 12\\
+        				& 20	&  2598	&  520	&  260	& 52 		& 26 		& 13\\\hline
+\end{tabular}
+\end{table}
     
     \begin{figure}[htbp]
         \centering
         \fbox{\includegraphics[width=0.8\textwidth]{../screenshots/beauti-prior.png}}
-        \caption{The prior settings.}
+        \caption{The prior settings option 1: using a fixed value for Lambda.}
         \label{fig:beauti-prior}
     \end{figure}   
+
+\textit{Gamma distribution for Lambda}: You also have the option of using a hyperprior for lambda to accommodate uncertainty in the parameter (sampling lambda is the default setting). However, the default setting is an improper prior (1/X), which is useless for species delimitation. The 1/X prior is not a proper probability distribution, and you cannot rely on the path-sampling results. Instead, use a gamma prior with a broad distribution, for example, alpha = 2 and beta = 200. The mean of the gamma distribution for Lambda is calculated as alpha*beta rather than alpha/beta as it is for theta. If there is prior information about the number of expected substitutions, then this could be used to set up the prior. Try setting the mean of the gamma distribution to be somewhere in the middle of the extreme lambda values (shown in Table 1) that apply to your study system. 
+
+    \begin{figure}[htbp]
+        \centering
+        \fbox{\includegraphics[width=0.8\textwidth]{../screenshots/beauti-prior2.png}}
+        \caption{The prior settings option 2: using a gamma prior for Lambda.}
+        \label{fig:beauti-prior2}
+    \end{figure}   
+    
     }
+
+   
+%   \newpage
+   
 
 
 \step{Specify MCMC settings and generate the XML file.}{
@@ -229,11 +266,9 @@
     \end{compactdesc}
     Leave the remaining options at their default values
     (Figure~\ref{fig:beauti-mcmc}). These MCMC values are way to low, and a thorough analysis requires much more computational time. 
-    The original SNP data include 46 samples, but the files 
-    included in this tutorial contain a reduced number of samples to speed up the analyses. 
     The MCMC run times are intentionally kept short (and the data files reduced) in this tutorial. These short analyses should run in approximately 2 -- 4 minutes depending
     on the number of processors available on your computer.  
-    Thorough analyses of the full data take 2 -- 6 days, depending on the number of species in the model. A SNP matrix with 1,000 loci requires 5 -- 20 days.
+    Thorough analyses of the full data takes 2 -- 6 days, depending on the number of species in the model, and generally require at least 100,000 generations. Running multiple independent analyses  using different starting seeds and comparing results is a good way to ensure that the analyses are converging.
  
     \begin{figure}[htbp]
         \centering
@@ -249,21 +284,12 @@
     the \localfile{BFD*-tutorial} folder.\\
     }
 
-
 \intermediate{\subsection{Running the stepping stone analysis with \program{BEAST}}}
 
-\step{Marginal likelihood estimation by GUI.}{
+\step{ Marginal likelihood estimation by GUI.}{
 There are two ways to set up the stepping stone analysis; through a GUI, and by editing the XML. The GUI is more convenient but makes it a bit harder to transfer the analysis to a cluster, and since stepping stone analyses are typically very computational intensive, it often makes sense to run them on a cluster. In this step, we explain how to set up the analysis using the GUI, and in the next two steps it is explained how to set up an XML file through a text editor.
 
-First, start the BEAST app-store using the command
-
-    	    \cmd{/path/to/BEASTv2.3.1/bin/appstore}
-	    
-	    or
-	    
-	    \cmd{appstore}
-
-A window similar to Figure~\ref{fig:appstore} should pop up.
+First, start the BEAST app-store by selecting the File/Launch apps menu in BEAUti (alternatively, double click the AppStore icon in the BEAST folder). A window similar to Figure~\ref{fig:appstore} should pop up.
 
     \begin{figure}[htbp]
         \centering
@@ -272,7 +298,13 @@ A window similar to Figure~\ref{fig:appstore} should pop up.
         \label{fig:appstore}
     \end{figure}
 
-Select the Path sampler icon, and hit the Launch button. A new window pops up with the GUI for path sampling/stepping stone analysis similar to Figure~\ref{fig:pathsampler}. Select the file with MCMC analysis you just set up in BEAUti, and change the settings as indicated in Figure~\ref{fig:pathsampler}.
+Select the Path sampler icon, and hit the Launch button. A new window pops up with the GUI for path sampling/stepping stone analysis similar to Figure~\ref{fig:pathsampler}. 
+
+If you prefer to start from the command line, you can use the following in a terminal:
+
+    	    \cmd{/path/to/BEASTv2.4.5/bin/appstore PathSampler}
+
+Select the file with MCMC analysis you just set up in BEAUti, and change the settings as indicated in Figure~\ref{fig:pathsampler}.
 
     \begin{figure}[htbp]
         \centering
@@ -280,14 +312,14 @@ Select the Path sampler icon, and hit the Launch button. A new window pops up wi
         \caption{GUI for path sampling/stepping stone analysis.}
         \label{fig:pathsampler}
     \end{figure}
-}
 
-\intermediate{\subsection{Editing the XML file for marginal likelihood estimation}}
 
-\step{Editing the XML file for marginal likelihood estimation.}{
+%\intermediate{\subsection{Editing the XML file for marginal likelihood estimation}}
+
+{\bf Step 11b} {Editing the XML file for marginal likelihood estimation.}{
 Species delimitation using SNPs requires marginal likelihood estimation. 
 You will need to edit the XML file to prepare it for analysis in \program{BEAST}. Instructions for setting up
-marginal likelihood estimation using path sampling are provided at the \href{http://www.beast2.org/wiki/index.php/Path_Sampling}{BEAST} website. The procedure involves (1) typing in some short codes in a few places, (2) replacing some words, and (3) copying and pasting some sections around.
+marginal likelihood estimation using path sampling are provided at the \href{http://www.beast2.org/tutorials}{BEAST} website. The procedure involves (1) typing in some short codes in a few places, (2) replacing some words, and (3) copying and pasting some sections around. Specific instructions are below:
  
 Open your XML file in a text editor. Search and replace the opening run statement (located about half way through the file) with an mcmc statement by changing {\bf ``<run ...>''} into {\bf ``<mcmc ...>''.} Next, type a new closing mcmc statement, {\bf ``</mcmc>''}, just before the closing run statement, {\bf ``</run>''}, located at the end of the file.
 
@@ -309,8 +341,8 @@ Now you are ready to insert the path sampling commands. You will need to insert 
 
 {\bf Important:} If you copy and paste this section into your XML file, be sure to check that the symbols paste correctly. The quote symbols (`` ` ' ") don't copy as they should, and these will cause problems. Also, make sure that the root directory path (rootdir) exists on your computer.
 
-	These path sampling parameters are way to low, and a thorough analysis requires much more computational time. The MCMC run times are 
-    intentionally kept short in this tutorial so that we have time to conduct analyses and discuss the results.
+	These path sampling parameters are way to low, and a thorough analysis requires much more computational time. Stable marginal likelihood estimates usually require at least 48 steps (sometimes 100), chainLength = 100,000 (sometimes 1,000,000), and preBurnin=10,000 (sometimes 100,000). The MCMC run times are 
+    intentionally kept short in this tutorial to obtain quick (but meaningless) results. The run time on a MacBook Pro 2.3GHz i7 processor with 16GB of memory is approximately 2.5 minutes, and this is running 8 concurrent steps (= 8 threads). Increasing the number of threads will speed up the analysis by running more concurrent path sampling steps, but this requires more memory (this analysis uses about 12GB of memory). For large-scale analyses, many users find that they run out of memory before processors.
 
 The path sampling parameters that you just entered into your XML file are as follows:
 
@@ -324,7 +356,7 @@ The path sampling parameters that you just entered into your XML file are as fol
       \item[\field{nrOfSteps: the number of path sampling steps to use}]
     \end{compactdesc}
     
-For older versions of \program{SNAPP} (<v1.1.10) you may need an extra step; find the text {\bf ``snap.MCMC''} and replace it with {\bf ``beast.core.MCMC''.}  
+If for some reason you are using an older versions of \program{SNAPP} (<v1.1.10) you may need an extra step; find the text {\bf ``snap.MCMC''} and replace it with {\bf ``beast.core.MCMC''.}  
 Finally, move the entire {\bf ``stateDistribution''} element to just before the run element. This step requires that you move all of the lines starting with {\bf ``<stateDistribution''} and ending with {\bf ``</stateDistribution>''} to just above the run element.
 
 
@@ -335,23 +367,23 @@ Finally, move the entire {\bf ``stateDistribution''} element to just before the 
 
 \step{Run the XML file in \program{BEAST.}}{
 	    You can execute the XML file in \program{BEAST} using the GUI or the command line. If you are using Mac OSX or Windows, you should 
-	    be able to do launch the \program{BEAST} GUI by double clicking on the application icon. 
+	    be able to launch the \program{BEAST} GUI by double clicking on the application icon. 
 	    After the \program{BEAST} window appears, click the \field{Choose File\ldots} button, 
-	    and select the XML file you just created (Figure~\ref{fig:beast}). Increase the \field{Thread pool size} to the 
-	    maximum number of threads that you can run on your computer. 
+	    and select the XML file you just created (Figure~\ref{fig:beast}). Increase the \field{Thread pool size} to speed up your analysis. 
+	    Running SNAPP with multiple threads can increase speeds, but experimenting with the number of threads is required to get the best performance.
+
 	    Click \field{Run}. The analysis should take about 10 minutes. 
 	    You can also run \program{BEAST} from the command line. Open the {\bf Terminal} Application and navigate to the folder 
 	    containing your {\bf runA.xml} file. To execute the file, type the following at the command line:
 	    
-	    \cmd{/path/to/BEASTv2.3.1/bin/beast -threads 8 runA.xml}
+	    \cmd{/path/to/BEASTv2.4.1/bin/beast -threads 8 runA.xml}
 	    
 	    or
 	    
 	    \cmd{beast -threads 8 runA.xml}
 	    
-	    if you have already moved the \program{BEAST} executable to your path. Remember to set the number of \field{threads} to the maximum number available on your computer.
-	  
-	
+	    if you have already moved the \program{BEAST} executable to your path. Caution: setting the number of \field{threads} beyond the maximum number available on your computer can have serious drawbacks, and you will probably not have enough memory to support all of those separate analyses.
+	  	
 	\begin{figure}[htbp]
         \centering
         \fbox{\includegraphics[width=0.5\textwidth]{../screenshots/beast.png}}
@@ -380,9 +412,8 @@ Each row shows the results from one path sampling step. The example in Figure~\r
 
 \step{Setting up new XML files for species delimitation.}{
 Now that you have one XML file up and running it is easy to make new XML files for each species delimitation model.
-To prepare a new file for species delimitation, we
-have to make a few slight modifications to the existing runA.xml file: (1) save a copy of the xml file as runB.xml and save it in a new folder with the same name, (2) change the file stem names in the xml file so that you don't accidentally overwrite any of your previous results, (3) edit the path sampling root directory to point to the new runB folder, 4) change the species assignments listed in the  {\bf ``stateDistribution''} element. This last part requires changing the number and/or composition of taxonset features. Each taxonset begins with {\bf ``<taxonset ...>''} and ends with {\bf ``</taxonset>''} (Figure~\ref{fig:beast-taxon-set}). To lump species, simply combine the taxon names into a single  taxonset feature. To split a species, simple create a new taxonset containing the appropriate taxon names. To reassign a taxon to a different species you can cut and paste the taxon to the new taxonset. 
-XML files containing the species assignments shown in Figure \ref{fig:map} are provided with this tutorial (see Box~\ref{box:tutorialDir}). The XML files included with this tutorial contain a reduced number of samples in the taxonset blocks to help speed up the analyses.
+To prepare a new file for species delimitation, make a few slight modifications to the existing runA.xml file: (1) save a copy of the xml file as runB.xml and save it in a new folder with the same name, (2) change the file stem names in the xml file so that you don't accidentally overwrite any of your previous results, (3) edit the path sampling root directory to point to the new runB folder, 4) change the species assignments listed in the  {\bf ``stateDistribution''} element. This last part requires changing the number and/or composition of taxonset features. Each taxonset begins with {\bf ``<taxonset ...>''} and ends with {\bf ``</taxonset>''} (Figure~\ref{fig:beast-taxon-set}). To lump species, simply combine the taxon names into a single taxonset feature. To split a species, simple create a new taxonset containing the appropriate taxon names. To reassign a taxon to another species you can cut and paste the taxon to a different taxonset. 
+XML files containing the species assignments shown in Figure \ref{fig:map} are provided with this tutorial (see Box~\ref{box:tutorialDir}). The XML files included with this tutorial contain a reduced number of samples in the taxonset blocks to help speed up the analyses. You do not have to exclude the samples from the data matrix and rerun \program{BEAUTi}. It is much more efficient to simply edit the taxonset features to include only those samples that you intend to anlayze.
 
        \begin{figure}[htbp]
         \centering
@@ -397,29 +428,27 @@ XML files containing the species assignments shown in Figure \ref{fig:map} are p
    After you run each of the alternative species delimitation models you can rank them by their marginal likelihood estimate (MLE). You 
    can also calculate Bayes factors to compare the models. 
    The Bayes factor (BF) is a model selection tool that is simple and well suited for the purposes of comparing species delimitation models. 
-   Calculating the natural logarithm of the BF (ln BF) between models is simple. To do so, simply subtract the ln MLE values for two models (ln BF = (ln MLE(model1 ) - ln MLE(model2)). A negative BF value indicates support in favor of model 1. A positive BF value indicates support in favor of model 2. 
-   
-{\bf Note} that the ln MLE values are provided directly by the stepping stone analysis, but the natural logarithms bit 'ln' is typically not mentioned but implicitly assumed. Likewise, BF often stands for ln BF, and in the remained, we will drop the ln for MLE and BF.
+   Calculating the BF between models is simple. To do so, simply subtract the MLE values for two models, and then multiply the difference by two (BF = 2 x (model1 - model2). A positive BF value indicates support in favor of model 1. A negative BF value indicates support in favor of model 2. 
 
 The strength of support from BF comparisons of competing models can be evaluated using the framework of \cite{kass95}. 
  The BF scale is as follows: 
-0 < BF < 1.1 is not worth more than a bare mention, 1.1 < BF < 3 is positive evidence, 3 < BF < 5 is strong support, and BF > 5 is decisive.
+0 < BF < 2 is not worth more than a bare mention, 2 < BF < 6 is positive evidence, 6 < BF < 10 is strong support, and BF > 10 is decisive.
 
-The results for the seven gecko models are provided in Table 1. The model that splits \textit{Hemidactylus eniangii} into two species (runF) is the top-ranked model. It has the largest MLE value, and it is supported in favor of the current taxonomy model (runA). The BF in support for model F is decisive compared to model A. 
+The results for the seven gecko models are provided in Table 2. The model that lumps the western forests into one species (runB) is the top-ranked model. It has the largest MLE value, and it is supported in favor of the current taxonomy model (runA). The BF in support for model B is decisive compared to model A. It is important to emphasize that these results are \textit{tragically deficient} in terms of the MCMC analysis. Much, much longer runs are required to obtain stable results. 
 
-Table 1: Path sampling results for the seven species delimitation models shown in Figure \ref{fig:map}.
+Table 2: Path sampling results for the seven species delimitation models shown in Figure \ref{fig:map}. All Bayes factor (BF) calculations are made against the current taxonomy model (runA). Therefore, negative BF values indicate support for the current taxonomy model, and positive BF values indicate support for the alternative model.
 \begin{table}[ht]
 \tabcolsep=0.2cm
 \begin{tabular}{l c c c c } 
 \hline     
-Model 							& Species 	&  MLE 	& Rank 	& BF\\\hline
-runA, current taxonomy				& 4 			& -1673.4 	& 2		& -- \\
-runB, lump western forests			& 3 			& -1724.2 	& 5		& +50.8\\
-runC, lump central forests				& 3 			& -1788.0 	& 6		& +114.6\\
-runD, lump western \& central forests	& 2 			& -1842.9 	& 7		& +169.5\\
-runE, split \textit{fasciatus}			& 5 			& -1713.2 	& 4		& +39.8\\
-runF, split \textit{eniangii} 				& 5 			& -1625.9 	& 1		& -47.5 \\
-runG, reassign Bioko Island			& 4 			& -1712.6 	& 3 		& +39.2\\\hline
+Model 							& Species 	& MLE 	& Rank 		& BF\\\hline
+runA, current taxonomy				& 4 			& -935.820	& 5		& --\\
+runB, lump western forests			& 3 			& -898.914	& 1		& -73.8\\
+runC, lump central forests				& 3 			& -963.806	& 7		& +56.0\\
+runD, lump western \& central forests	& 2 			& -935.930	& 6		& +0.2\\
+runE, split \textit{fasciatus}			& 5 			& -924.466	& 4		& -22.7\\
+runF, split \textit{eniangii} 				& 5 			& -919.750	& 2		& -32.1\\
+runG, reassign Bioko Island			& 4 			& -920.018	& 3 		& -31.6\\\hline
 \end{tabular}\\
 MLE = Marginal likelihood estimate\\
 BF = Bayes factor\\
@@ -434,9 +463,8 @@ TreeAnnotator will summarize the posterior distribution of species trees and ide
     You can also specify the burnin value if you haven't already excluded burn-in samples in \program{LogCombiner}.
 	For the \field{Target tree type} field, choose \fieldvalue{Maximum clade credibility tree}.
     For the \field{Node heights} field, choose \fieldvalue{Median heights}.
-	Select the \field{Input Tree File} button and select the file \localfile{runA.trees}.
-	Select the \field{Output File} button and specify the \localfile{output} directory and a 
-	file name, \localfile{runA-MCC.tre}.
+	Select the \field{Input Tree File} button and select the file \localfile{runA.trees}. When conducting path sampling, SNAPP generates a posterior distribution of trees for each path sampling step. You will typically only want to summarize the tree file in the folder corresponding to theta=1, since the other folders contain trees that were estimated with modified likelihoods. Check the SNAPP screen output to verify which path sampling step corresponds to theta=1 (this changes with different versions of SNAPP).
+	Select the \field{Output File} button and specify the \localfile{output} directory and a file name, \localfile{runA-MCC.tre}.
 	Click \field{Run}
 }
 
@@ -449,9 +477,16 @@ TreeAnnotator will summarize the posterior distribution of species trees and ide
     \fieldvalue{posterior} for the \subItem{Branch labels}{Display} fields.
     Check the \field{Node Bars} option and select
     \fieldvalue{height\_95\%\_HPD} for the \subItem{Node bars}{Display} field.
-    
-    Alternatively, start DensiTree (it is part of the BEAST distribution, so just double click the icon in OSX or Windows or use the \cmd{densitree} command in Linux) and read in the \localfile{runA.trees} file representing the posterior distribution. By selecting population size for branch widths, population sizes throughout the tree can be visualised.
-}
+ 
+ 
+ You can also get a summary of some tree statistics using the TreeSetAnalyser, which you can launch from the BEAST app launcher, and looks something like Figure~\ref{fig:treesetanalyser}
+       \begin{figure}[htbp]
+        \centering
+        \fbox{\includegraphics[width=0.5\textwidth]{../screenshots/treesetanalyser.png}}
+        \caption{Tree set analyser utility.}
+        \label{fig:treesetanalyser}
+    \end{figure}
+     }
 
 
 
