@@ -21,13 +21,12 @@
         \fbox{\begin{minipage}[c][15em][c]{0.5\textwidth}
             \ttfamily
             \begin{compactitem}
-                \item SNAPPER-delimitation-tutorial/
+                \item SNAPPER-delimitation/
             \begin{compactitem}
                 	\item SNAPPER-delimitation-tutorial.pdf
                     \item data/
                        \begin{compactitem}
                         \item hemi129.nex
-                        \item smallhemi129.nex
                     \end{compactitem}
                     \item xml/
                     \begin{compactitem}
@@ -38,11 +37,12 @@
                         \item runE.xml
                         \item runF.xml
                         \item runG.xml
+                        \item runS.xml
                     \end{compactitem}
             \end{compactitem}
             \end{compactitem}
         \end{minipage}}
-        \caption{The files included in this tutorial. The data folder contains the SNP data in binary format. Ready-to-run XML files are included in the xml folder.}
+        \caption{The files included in this tutorial. The data folder contains the SNP data as binary sequences. Ready-to-run XML files are included in the xml folder.}
         \label{box:tutorialDir}
     \end{textbox}
 }
@@ -67,7 +67,7 @@
      menu \subItem{File}{Manage Packages.} A window should 
      appear that looks something like Figure~\ref{fig:beauti-manage-packages}.
      Select and install the packages \program{{\bf SNAPPER}} and \program{{\bf Model\_Selection}}. You can then exit the 
-     window by clicking the {\bf ``Close''} button.
+     window by clicking the {\bf ``Close''} button. Since \program{{\bf SNAPPER}} depends on the \program{{\bf SNAPP}} package and \program{{\bf Model\_Selection}} on the \program{{\bf BEASTLabs}} package, these packages will be automatically installed as well.
     \begin{figure}[htbp]
         \centering
         \fbox{\includegraphics[width=0.7\textwidth]{../screenshots/beauti-manage-packages.png}}
@@ -95,10 +95,10 @@
 
 
 \step{Import the SNP data.}{
-    Import the SNP data (the {\bf smallhemi129.nex} file)
+    Import the SNP data (the {\bf hemi129.nex} file)
     using the drop-down menu \subItem{File}{Import Alignment.}
     
-    {\em NB if you load the full data set from {\bf hemi129.nex} instead you might not finish this tutorial in the allocated time frame.}
+    \footnote{For the SNAPP tutorial, there is a smaller version of the {\bf hemi129.nex} file called {\bf smallhemi129.nex}. If you load the full data set from {\bf hemi129.nex} with SnAPP you might not finish this tutorial in the allocated time frame. However, the runtime of SNAPPER is not sensitive to the number of sequences per species, just the number of species and length of sequences.}
 
     Once the data are successfully loaded into \program{BEAUTi} you should see a list of the 
     samples included in the data file (Figure~\ref{fig:beauti-data-imported}.)
@@ -132,7 +132,9 @@
     Other options for assigning species names are available using the ``Guess'' button. The screen should look similar to 
      Figure~\ref{fig:beauti-guess-trait}. 
      
-    How many samples should you include? The number of samples slows down SNAPPER much more than the number of SNPs. Therefore, if your analyses are going too slow, then it is typically better to randomly subsample down to an even proportion of sequences from each species instead of removing SNPs. Reducing the number of samples by half will more than half the analysis time. When setting up a new analysis, start with a small number of samples for each species (for example, 4 samples per species), which will enable you to make quicker progress. Increase the number of samples once your analyses are returning reasonable results. If you are overambitious with your sampling, then your analyses will become unbearably slow. 
+    How many samples should you include? More samples give more accurate estimates and has not computation cost for SNAPPER (unlike SNAPP, which is very sensitive to the number of samples), so the more samples the better.
+    Keep in mind that the number of species slows down SNAPPER much more than the number of SNPs.
+    If you have too many species and the analysis rusn unbearably slow, you might sub-sample the number of species
 
     \begin{figure}[htbp]
         \centering
@@ -158,7 +160,8 @@
     \end{compactdesc}
     
     \textit{Recommendations:}  Set mutation rates u and v = 1 and do not sample. Alternatively, you can click the {\bf ``Calc mutation rates''} button to get a direct estimate of u and v. Either way, you typically do not have to estimate these parameters during the MCMC. 
-    Coalescent Rate: check the sample box. If you do not sample, then you assume that all population sizes are the same, which is unrealistic. The coalescent rate is 2/theta, and the number is simply the starting value used to initialize the analysis. Do not confuse the coalescent rate with the theta prior. The theta prior is described in detail in the next section.
+    
+    ``Coalescent Rate'': check the sample box. If you do not sample, then you assume that all population sizes are the same, which is unrealistic. The coalescent rate is 2/theta, and the number is simply the starting value used to initialize the analysis. Do not confuse the coalescent rate with the theta prior. The theta prior is described in detail in the next section.
     
     The ``Include non-polymorphic'' checkbox is used in cases where invariant sites have been included in the data. The likelihood calculations are 
     different if \program{SNAPPER} assumes that all constant sites have been removed. If you are using a typical SNP dataset that only includes variable site, then make sure that the box is not checked.
@@ -169,7 +172,6 @@
     The ``Show Pattern Likelihoods And Quit'' checkbox is handy if you just want to print out the likelihoods for all patterns in the starting state and then quit.
     
     The ``Use Log Likelihood Correction'' checkbox is for calculating corrected likelihood values for Bayes factor test of different species assignments (the calculation is almost instantaneous, and it will not slow down your analysis).
-        
     }
     
         \begin{figure}[htbp]
@@ -183,11 +185,13 @@
     
 \step{Define the priors.}{
     Next, move to the \menutab{Prior} tab and specify the priors (Figure~\ref{fig:beauti-prior}.) Again, read the 
-    documentation \href{http://www.beast2.org/tutorials}{A rough guide to SNAPPER} 
+    documentation \href{http://www.beast2.org/tutorials}{A rough guide to SNAPP} 
     to learn more about these priors. It is important to be aware of the biological meaning of these priors. 
     One problem with \program{SNAPPER} is that it is deceptively easy to set up an analysis using default options. 
     However, setting it up right requires thinking about details that some empiricists would rather not think about.
 
+
+TODO: fix the following
 \small{
     \begin{compactdesc}
        \item[\field{Alpha: shape parameter for the gamma prior on population sizes.}]
@@ -268,9 +272,9 @@ Number of species 	& 5	& 1283 	& 257 	& 128 	& 26 		& 13 		& 6\\
     \end{compactdesc}
     Leave the remaining options at their default values
     (Figure~\ref{fig:beauti-mcmc}). These MCMC values are way to low, and a thorough analysis requires much more computational time. 
-    The MCMC run times are intentionally kept short (and the data files reduced) in this tutorial. These short analyses should run in approximately 2 -- 4 minutes depending
+    The MCMC run times are intentionally kept short in this tutorial. These short analyses should run in approximately 2 -- 4 minutes depending
     on the number of processors available on your computer.  
-    Thorough analyses of the full data takes 2 -- 6 days, depending on the number of species in the model, and generally require at least 100,000 generations. Running multiple independent analyses  using different starting seeds and comparing results is a good way to ensure that the analyses are converging.
+    Thorough analyses of the full data takes 2 -- 6 days, depending on the number of species in the model, and generally require at least 100,000 generations. Running multiple independent analyses using different starting seeds and comparing results is a good way to ensure that the analyses are converging.
  
     \begin{figure}[htbp]
         \centering
@@ -318,7 +322,7 @@ Select the file with MCMC analysis you just set up in BEAUti, and change the set
 
 %\intermediate{\subsection{Editing the XML file for marginal likelihood estimation}}
 
-{\bf Step 11b}{Editing the XML file for marginal likelihood estimation.}
+{\bf Step 11b}{ Editing the XML file for marginal likelihood estimation.}
 Species delimitation using SNPs requires marginal likelihood estimation. 
 You will need to edit the XML file to prepare it for analysis in \program{BEAST}. Instructions for setting up
 marginal likelihood estimation using path sampling are provided at the \href{http://www.beast2.org/tutorials}{BEAST} website. The procedure involves (1) typing in some short codes in a few places, (2) replacing some words, and (3) copying and pasting some sections around. Specific instructions are below:
@@ -415,12 +419,14 @@ Each row shows the results from one path sampling step. The example in Figure~\r
 \step{Setting up new XML files for species delimitation.}{
 Now that you have one XML file up and running it is easy to make new XML files for each species delimitation model.
 To prepare a new file for species delimitation, make a few slight modifications to the existing runA.xml file: (1) save a copy of the xml file as runB.xml and save it in a new folder with the same name, (2) change the file stem names in the xml file so that you don't accidentally overwrite any of your previous results, (3) edit the path sampling root directory to point to the new runB folder, 4) change the species assignments listed in the  {\bf ``stateDistribution''} element. This last part requires changing the number and/or composition of taxonset features. Each taxonset begins with {\bf ``<taxonset ...>''} and ends with {\bf ``</taxonset>''} (Figure~\ref{fig:beast-taxon-set}). To lump species, simply combine the taxon names into a single taxonset feature. To split a species, simple create a new taxonset containing the appropriate taxon names. To reassign a taxon to another species you can cut and paste the taxon to a different taxonset. 
-XML files containing the species assignments shown in Figure \ref{fig:map} are provided with this tutorial (see Box~\ref{box:tutorialDir}). The XML files included with this tutorial contain a reduced number of samples in the taxonset blocks to help speed up the analyses. You do not have to exclude the samples from the data matrix and rerun \program{BEAUTi}. It is much more efficient to simply edit the taxonset features to include only those samples that you intend to anlayze.
+XML files containing the species assignments shown in Figure \ref{fig:map} are provided with this tutorial (see Box~\ref{box:tutorialDir}). 
+%The XML files included with this tutorial contain a reduced number of samples in the taxonset blocks to help speed up the analyses. 
+You do not have to exclude the samples from the data matrix and rerun \program{BEAUTi}. It is much more efficient to simply edit the taxonset features to include only those samples that you intend to anlayze.
 
        \begin{figure}[htbp]
         \centering
         \fbox{\includegraphics[width=0.5\textwidth]{../../BFD*/screenshots/beast-taxon-set.png}}
-        \caption{Example of the taxonset features in the XML file.}
+        \caption{Example of the taxonset features in the XML file (reduced number of samples to fit on screen, the ready to run XML files for this tutorial contain more samples).}
         \label{fig:beast-taxon-set}
     \end{figure}
 }
@@ -436,21 +442,22 @@ The strength of support from BF comparisons of competing models can be evaluated
  The BF scale is as follows: 
 0 < BF < 2 is not worth more than a bare mention, 2 < BF < 6 is positive evidence, 6 < BF < 10 is strong support, and BF > 10 is decisive.
 
-The results for the seven gecko models are provided in Table 2. The model that lumps the western forests into one species (runB) is the top-ranked model. It has the largest MLE value, and it is supported in favor of the current taxonomy model (runA). The BF in support for model B is decisive compared to model A. It is important to emphasize that these results are \textit{tragically deficient} in terms of the MCMC analysis. Much, much longer runs are required to obtain stable results. 
+The results for the seven gecko models are provided in Table 2. The model that lumps the western forests into one species and splits \textit{eniangii} into two (runS) is the top-ranked model. It has the largest MLE value, and it is supported in favor of the current taxonomy model (runA). The BF in support for model S is decisive compared to model A. It is important to emphasize that these results are \textit{tragically deficient} in terms of the MCMC analysis. Much, much longer runs are required to obtain stable results. 
 
 Table 2: Path sampling results for the seven species delimitation models shown in Figure \ref{fig:map}. All Bayes factor (BF) calculations are made against the current taxonomy model (runA). Therefore, positive BF values indicate support for the current taxonomy model, and negative BF values indicate support for the alternative model.
 \begin{table}[ht]
 \tabcolsep=0.2cm
 \begin{tabular}{l c c c c } 
 \hline     
-Model 							& Species 	& MLE 	& Rank 		& BF\\\hline
-runA, current taxonomy				& 4 			& -935.820	& 5		& --\\
-runB, lump western forests			& 3 			& -898.914	& 1		& -73.8\\
-runC, lump central forests				& 3 			& -963.806	& 7		& +56.0\\
-runD, lump western \& central forests	& 2 			& -935.930	& 6		& +0.2\\
-runE, split \textit{fasciatus}			& 5 			& -924.466	& 4		& -22.7\\
-runF, split \textit{eniangii} 				& 5 			& -919.750	& 2		& -32.1\\
-runG, reassign Bioko Island			& 4 			& -920.018	& 3 		& -31.6\\\hline
+Model 							& Species 	& MLE 	& BF 		& Rank\\\hline
+runA     current taxonomy   & 4     &   -2517.7    &   -   &   2\\
+runB     lump western forests   & 3     &   -2527.1    &   -9.7   &   5\\
+runC     lump central forests   & 3     &   -2535.1    &   -17.7  &   6\\
+runD     lump western \& central forests    & 2     &   -2544.2    &   -26.98  &   7\\
+runE     split \textit{fasciatus}   & 5     &   -2525.4    &   -8.1    &   4\\
+runF     split \textit{eniangii}    & 5     &   -2518.3    &   -1.0  &   3\\
+runG     reassign Bioko Island  & 4     &   -3348.5    &   -831.1 &   8\\
+runS    lump western and split \textit{eniangii}    &4  &   -2170.4    &   346.88  &   1\\
 \end{tabular}\\
 MLE = Marginal likelihood estimate\\
 BF = Bayes factor\\
