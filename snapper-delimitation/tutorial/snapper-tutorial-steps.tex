@@ -96,9 +96,7 @@
 
 \step{Import the SNP data.}{
     Import the SNP data (the {\bf hemi129.nex} file)
-    using the drop-down menu \subItem{File}{Import Alignment.}
-    
-    \footnote{For the SNAPP tutorial, there is a smaller version of the {\bf hemi129.nex} file called {\bf smallhemi129.nex}. If you load the full data set from {\bf hemi129.nex} with SnAPP you might not finish this tutorial in the allocated time frame. However, the runtime of SNAPPER is not sensitive to the number of sequences per species, just the number of species and length of sequences.}
+    using the drop-down menu \subItem{File}{Import Alignment.\footnote{For the SNAPP tutorial, there is a smaller version of the {\bf hemi129.nex} file called {\bf smallhemi129.nex}. If you load the full data set from {\bf hemi129.nex} with SnAPP you might not finish this tutorial in the allocated time frame. However, the runtime of SNAPPER is not sensitive to the number of sequences per species, just the number of species and length of sequences.}}
 
     Once the data are successfully loaded into \program{BEAUTi} you should see a list of the 
     samples included in the data file (Figure~\ref{fig:beauti-data-imported}.)
@@ -134,7 +132,7 @@
      
     How many samples should you include? More samples give more accurate estimates and has not computation cost for SNAPPER (unlike SNAPP, which is very sensitive to the number of samples), so the more samples the better.
     Keep in mind that the number of species slows down SNAPPER much more than the number of SNPs.
-    If you have too many species and the analysis rusn unbearably slow, you might sub-sample the number of species
+    If you have too many species and the analysis rusn unbearably slow, you might sub-sample the number of species.
 
     \begin{figure}[htbp]
         \centering
@@ -148,22 +146,18 @@
 }
 
 
-\step{Set the mutation model.}{
-    Next, set up our model under the \menutab{Mutation Model} tab Figure~\ref{fig:beauti-mutation}.
-    Be sure to read the documentation \href{http://www.beast2.org/tutorials}{A rough guide to SNAPPER} to learn more about the model options. Briefly, the parameters are as follows:
-
-\small{
-    \begin{compactdesc}
-       \item[\field{Mutation Rate U: instantaneous rate of mutating from the 0 allele to the 1 allele.}]
-       \item[\field{Mutation Rate V: instantaneous rate of mutating from the 1 allele to the 0 allele.}]
-       \item[\field{Coalescence Rate: population size parameter with one value for each node in the tree.}]
-    \end{compactdesc}
+\step{Set the model parameters.}{
+    Next, set up our model under the \menutab{Model Parameters} tab Figure~\ref{fig:beauti-mutation}.
+    Be sure to read the documentation \href{http://www.beast2.org/tutorials}{A rough guide to SNAPP} to learn more about the model options\footnote{For SNAPP, the mutation rates U and V representing instantaneous rate of mutating from the 0 allele to the 1 allele and from 1 to 0 respectively are included in the model. However, keeping U and V equal to 1 seems more appropriate, so these parameters are hidden in BEAUti for the SNAPPER model.}. Briefly, the parameter of interest is the {\tt Coalescent Rate} which determines the population size parameter with one value for each node in the tree.
     
-    \textit{Recommendations:}  Set mutation rates u and v = 1 and do not sample. Alternatively, you can click the {\bf ``Calc mutation rates''} button to get a direct estimate of u and v. Either way, you typically do not have to estimate these parameters during the MCMC. 
+    \textit{Recommendations:}  %Set mutation rates u and v = 1 and do not sample. Alternatively, you can click the {\bf ``Calc mutation rates''} button to get a direct estimate of u and v. Either way, you typically do not have to estimate these parameters during the MCMC. 
     
-    ``Coalescent Rate'': check the sample box. If you do not sample, then you assume that all population sizes are the same, which is unrealistic. The coalescent rate is 2/theta, and the number is simply the starting value used to initialize the analysis. Do not confuse the coalescent rate with the theta prior. The theta prior is described in detail in the next section.
+    ``Coalescent Rate'': check the ``estimate`` box. If you do not sample, then you assume that all population sizes are the same, which is unrealistic. The coalescent rate is 2/theta, and the number is simply the starting value used to initialise the analysis. Do not confuse the coalescent rate with the theta prior. 
+    %The theta prior is described in detail in the next section.
     
-    The ``Include non-polymorphic'' checkbox is used in cases where invariant sites have been included in the data. The likelihood calculations are 
+    ``N'' is the dimension of Chebyshef functions used for approximating the SNAPP tree likelihood. N should be power of 2 plus 1 (e.g. 33, 17, 65). Higher values are more accurate but slower.
+    
+    The ``Non-polymorphic'' checkbox is used in cases where invariant sites have been included in the data. The likelihood calculations are 
     different if \program{SNAPPER} assumes that all constant sites have been removed. If you are using a typical SNP dataset that only includes variable site, then make sure that the box is not checked.
     
     The ``Mutation Only At Root'' checkbox indicates conditioning on zero mutations, except at root (default false). As a result, all gene 
@@ -172,7 +166,9 @@
     The ``Show Pattern Likelihoods And Quit'' checkbox is handy if you just want to print out the likelihoods for all patterns in the starting state and then quit.
     
     The ``Use Log Likelihood Correction'' checkbox is for calculating corrected likelihood values for Bayes factor test of different species assignments (the calculation is almost instantaneous, and it will not slow down your analysis).
-    }
+    
+    When the ``Use beta root prior'' checkbox is checked, instead of using a uniform prior for allele frequencies at the root, a beta root prior is used.
+ 
     
         \begin{figure}[htbp]
         \centering
@@ -191,20 +187,18 @@
     However, setting it up right requires thinking about details that some empiricists would rather not think about.
 
 
-TODO: fix the following
-\small{
-    \begin{compactdesc}
-       \item[\field{Alpha: shape parameter for the gamma prior on population sizes.}]
-       \item[\field{Beta: rate parameter for the gamma prior on population sizes.}]
-       \item[\field{Kappa: parameter used when selecting the CIR rate prior (below).}]
-       \item[\field{Lambda: Birth rate for the Yule model prior on the species tree.}]
-       \item[\field{Rateprior: prior on rates can be Gamma, InverseGamma, CIR, or Uniform.}]
-    \end{compactdesc}
-}
 
-\textit{Setting the expected divergence (theta) prior.} Recall that for a diploid population, theta = 4Nu, where N is the effective population size and u is the per-generation mutation rate. If theta=0.004, you expect to observe 0.4\% variation between two randomly sampled alleles in a population. Another way to think about this is in the expected number of substitutions; ``theta=0.004'' means that for two randomly sampled individuals within a population you expect to observe 4 SNPs in 1,000 bases. In \program{BEAUTi}, the gamma prior on theta is parameterized such that the mean is alpha/beta. For example, if alpha=1 and beta = 250, the prior mean on theta is 0.004. One way of estimating a reasonable mean for the theta prior is to calculate pairwise sequence divergence among all individuals known to belong to a single species and take the average value as the mean for theta. Higher prior means on theta will favor models with populations grouped together, because they represent an expectation that average divergence within populations is relatively high. Users can select different distributions for the theta prior under ``Rateprior''. If ``Rateprior'' is set to ``gamma'' (recommended), the mean value of theta is calculated as alpha/beta.  Note that in some implementations (including the R function rgamma() and Beauti's internal visualizer), the mean of a gamma distribution is calculated as alpha*beta rather than alpha/beta. This is the case for the Lambda prior (discussed below). Finally, kappa is a parameter that is only applied when the CIR distribution is used (see the Rough Guide to SNAPPER for further details). 
 
-\textit{Setting the speciation rate prior Lambda:} \program{SNAPPER} uses a Yule prior for the species tree and branch lengths on the species tree. This prior has a single parameter, {$\lambda$} (Lambda), representing the speciation rate. This rate, in turn, determines the (prior) expected height of the species tree. The higher the speciation rate, the higher the probability of supporting more species during species delimitation. The trees that come out of SNAPPER are not time calibrated. The branch lengths should be interpreted in units of expected substitutions per site. Translating this into time requires an assumption about the substitution rate. Two different options for setting lambda are compared in this tutorial: using a fixed value versus assigning a broad prior. In general, tree height estimates are similar using either a fixed lambda (lambda = 5) or a gamma distribution (2, 200), as shown below. The mean of the gamma distribution for Lambda is calculated as alpha*beta rather than alpha/beta as it is for theta. 
+The default priors are
+\begin{itemize}
+\item for the tree, a Yule prior representing a pure birth process with birth rate parameter {$\lambda$}.
+\item a {\bf terrible} uniform prior with range minus infinity to plus infinity for the birth rate {$\lambda$}.
+\item a gamma prior with shape=2, scale=2 for coalescent rates.
+\end{itemize}
+
+The prior on {$\lambda$} seems non-informative allowing the data to drive the analysis instead of prior information. However, for estimating the marginal likelihood using path sampling (see Step 11), ``proper'' priors are required. A proper prior is a prior that when integrating over its range sums to 1. Since the uniform prior has infinite bounds, the integral over the range does not do that. The prior can be made proper by defining finite upper and lower bounds.\footnote{The 1/X prior is another prior that is not proper and therefore not recommended.}
+
+\textit{Setting the speciation rate prior Lambda:} \program{SNAPPER} by default uses a Yule prior for the species tree and branch lengths on the species tree. This prior has a single parameter, {$\lambda$} (Lambda), representing the speciation rate. This rate, in turn, determines the (prior) expected height of the species tree. The higher the speciation rate, the higher the probability of supporting more species during species delimitation. The trees that come out of SNAPPER are not time calibrated. The branch lengths should be interpreted in units of expected substitutions per site. Translating this into time requires an assumption about the substitution rate. Two different options for setting lambda are compared in this tutorial: using a fixed value versus assigning a broad prior. In general, tree height estimates are similar using either a fixed lambda (lambda = 5) or a gamma distribution (2, 2), as shown below. The mean of the gamma distribution for Lambda is calculated as alpha*beta rather than alpha/beta as it is for theta. 
 
      \begin{figure}[htbp]
         \centering
@@ -214,7 +208,7 @@ TODO: fix the following
     \end{figure}  
     
     
-\textit{Fixed value for Lambda}: The specific prior that you use for {$\lambda$} (Lambda) depends on the number of species in your analysis and the depth of your tree in units of expected substitutions per site. See the Rough Guide to SNAPPER for further details and an equation for calculating Lambda. Using a useful script written by Jamie Oaks, called \href{https://github.com/joaks1/pyule}{pyule}, you can calculate an appropriate lambda value based on prior information about the number of species, and the height of the species tree in expected substitutions per site. If sequence data are available, then you can approximate the height of the species tree obtained by calculating the maximum observed divergence between any pair of taxa divided by two (height = max divergence/2). 
+\textit{Fixed value for Lambda}: The specific prior that you use for {$\lambda$} (Lambda) depends on the number of species in your analysis and the depth of your tree in units of expected substitutions per site. See the Rough Guide to SNAPP for further details and an equation for calculating Lambda. Using a useful script written by Jamie Oaks, called \href{https://github.com/joaks1/pyule}{pyule}, you can calculate an appropriate lambda value based on prior information about the number of species, and the height of the species tree in expected substitutions per site. If sequence data are available, then you can approximate the height of the species tree obtained by calculating the maximum observed divergence between any pair of taxa divided by two (height = max divergence/2). 
    \newpage
 Table 1 provides some suggestions for Lambda priors across a range of expected substitutions per site from root to tip (up to 20\% sequence divergence from root to any tip), and for relatively small species trees (up to 20 species). In general, different Lambda settings do not influence the results, since in most cases the data will dominate. 
 
@@ -250,6 +244,11 @@ Number of species 	& 5	& 1283 	& 257 	& 128 	& 26 		& 13 		& 6\\
         \label{fig:beauti-prior2}
     \end{figure}   
     
+    
+\textit{Setting the expected divergence (theta) prior.} Recall that for a diploid population, theta = 4Nu, where N is the effective population size and u is the per-generation mutation rate. If theta=0.004, you expect to observe 0.4\% variation between two randomly sampled alleles in a population. Another way to think about this is in the expected number of substitutions; ``theta=0.004'' means that for two randomly sampled individuals within a population you expect to observe 4 SNPs in 1,000 bases. In \program{SNAPPER}, the gamma prior on theta is parameterised such that the mean is alpha*beta. For example, if alpha=2 and beta = 0.002, the prior mean on theta is 0.004. One way of estimating a reasonable mean for the theta prior is to calculate pairwise sequence divergence among all individuals known to belong to a single species and take the average value as the mean for theta. Higher prior means on theta will favour models with populations grouped together, because they represent an expectation that average divergence within populations is relatively high. 
+You can select different distributions for the theta prior by clicking the drop down box with "Gamma" next to "snapperCoalescentRate...". If the prior is set to ``Gamma'' (recommended), the mean value of theta is calculated as alpha*beta when using the ShapeScale mode.  Note that in some implementations, the mean of a gamma distribution is calculated as alpha/beta rather than alpha*beta. 
+
+    
     }
 
    
@@ -265,9 +264,9 @@ Number of species 	& 5	& 1283 	& 257 	& 128 	& 26 		& 13 		& 6\\
         \item[\field{State Burnin:}] \fieldvalue{0}
         \item[\field{Chain Length:}] \fieldvalue{1000}
         \item[\field{Store Every:}] \fieldvalue{10}
-        \item[\field{tracelog:File Name:}] \fieldvalue{runA.log}
+        \item[\field{tracelog:File Name:}] \fieldvalue{RunA.log}
         \item[\field{tracelog:Log Every:}] \fieldvalue{10}
-        \item[\field{treelog:File Name:}] \fieldvalue{runA.trees}
+        \item[\field{treelog:File Name:}] \fieldvalue{RunA.trees}
         \item[\field{treelog:Log Every:}] \fieldvalue{10}
     \end{compactdesc}
     Leave the remaining options at their default values
@@ -362,8 +361,6 @@ The path sampling parameters that you just entered into your XML file are as fol
       \item[\field{nrOfSteps: the number of path sampling steps to use}]
     \end{compactdesc}
     
-If for some reason you are using an older versions of \program{SNAPPER} (<v1.1.10) you may need an extra step; find the text {\bf ``snap.MCMC''} and replace it with {\bf ``beast.core.MCMC''.}  
-Finally, move the entire {\bf ``stateDistribution''} element to just before the run element. This step requires that you move all of the lines starting with {\bf ``<stateDistribution''} and ending with {\bf ``</stateDistribution>''} to just above the run element.
 
 
 }
@@ -436,13 +433,13 @@ You do not have to exclude the samples from the data matrix and rerun \program{B
    After you run each of the alternative species delimitation models you can rank them by their marginal likelihood estimate (MLE). You 
    can also calculate Bayes factors to compare the models. 
    The Bayes factor (BF) is a model selection tool that is simple and well suited for the purposes of comparing species delimitation models. 
-   Calculating the BF between models is simple. To do so, simply subtract the MLE values for two models, and then multiply the difference by two (BF = 2 x (model1 - model2). A positive BF value indicates support in favor of model 1. A negative BF value indicates support in favor of model 2. 
+   Calculating the BF between models is simple. To do so, simply subtract the MLE values for two models, and then multiply the difference by two (BF = 2 x (model1 - model2). A positive BF value indicates support in favour of model 1. A negative BF value indicates support in favour of model 2. 
 
 The strength of support from BF comparisons of competing models can be evaluated using the framework of \cite{kass95}. 
  The BF scale is as follows: 
 0 < BF < 2 is not worth more than a bare mention, 2 < BF < 6 is positive evidence, 6 < BF < 10 is strong support, and BF > 10 is decisive.
 
-The results for the seven gecko models are provided in Table 2. The model that lumps the western forests into one species and splits \textit{eniangii} into two (runS) is the top-ranked model. It has the largest MLE value, and it is supported in favor of the current taxonomy model (runA). The BF in support for model S is decisive compared to model A. It is important to emphasize that these results are \textit{tragically deficient} in terms of the MCMC analysis. Much, much longer runs are required to obtain stable results. 
+The results for the seven gecko models are provided in Table 2. The model that lumps the western forests into one species and splits \textit{eniangii} into two (runS) is the top-ranked model. It has the largest MLE value, and it is supported in favor of the current taxonomy model (runA). The BF in support for model S is decisive compared to model A. It is important to emphasise that these results are \textit{tragically deficient} in terms of the MCMC analysis. Much, much longer runs are required to obtain stable results. 
 
 Table 2: Path sampling results for the seven species delimitation models shown in Figure \ref{fig:map}. All Bayes factor (BF) calculations are made against the current taxonomy model (runA). Therefore, positive BF values indicate support for the current taxonomy model, and negative BF values indicate support for the alternative model.
 \begin{table}[ht]
@@ -464,10 +461,10 @@ BF = Bayes factor\\
 \end{table}
 }
 
-\intermediate{\subsection{Summarizing the trees using \program{TreeAnnotator}.}}
+\intermediate{\subsection{Summarising the trees using \program{TreeAnnotator}.}}
 
-\step{Summarize the species tree using \program{TreeAnnotator}.}{
-TreeAnnotator will summarize the posterior distribution of species trees and identify the topology with the best posterior support, and summarize the divergence times for each node in the tree.
+\step{Summarise the species tree using \program{TreeAnnotator}.}{
+TreeAnnotator will summarize the posterior distribution of species trees and identify the topology with the best posterior support, and summarise the divergence times for each node in the tree.
 	Launch the \program{TreeAnnotator} program.
     You can also specify the burnin value if you haven't already excluded burn-in samples in \program{LogCombiner}.
 	For the \field{Target tree type} field, choose \fieldvalue{Maximum clade credibility tree}.
@@ -477,9 +474,9 @@ TreeAnnotator will summarize the posterior distribution of species trees and ide
 	Click \field{Run}
 }
 
-\intermediate{\subsection{Visualizing the tree in \program{FigTree}}}
+\intermediate{\subsection{Visualising the tree in \program{FigTree}}}
 
-\step{Visualize the species tree in \program{FigTree}.}{
+\step{Visualise the species tree in \program{FigTree}.}{
     Launch the \program{FigTree} program, and load the \localfile{runA-MCC.tre} file
     you just created with \program{TreeAnnotator}.
     Check the \field{Branch Labels} option and select

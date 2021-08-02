@@ -170,6 +170,8 @@ name="rawdata">
             </distribution>
         </distribution>
         
+        <operator id="SnapperGammaMover.t:hemi129" spec="snap.operators.GammaMover" coalescenceRate="@snapperCoalescentRate.t:hemi129" scale="0.75" weight="1.0"/>
+        <operator id="SnapperRateMixer.t:hemi129" spec="snap.operators.RateMixer" coalescenceRate="@snapperCoalescentRate.t:hemi129" scaleFactors="0.25" tree="@Tree.t:hemi129" weight="1.0"/>
         <operator id="YuleBirthRateScaler.t:hemi129" spec="ScaleOperator" parameter="@birthRate.t:hemi129" weight="3.0"/>
         <operator id="YuleModelTreeScaler.t:hemi129" spec="ScaleOperator" scaleFactor="0.5" tree="@Tree.t:hemi129" weight="3.0"/>
         <operator id="YuleModelTreeRootScaler.t:hemi129" spec="ScaleOperator" rootOnly="true" scaleFactor="0.5" tree="@Tree.t:hemi129" weight="3.0"/>
