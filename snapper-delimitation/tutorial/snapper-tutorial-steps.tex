@@ -162,9 +162,7 @@
     
     The ``Mutation Only At Root'' checkbox indicates conditioning on zero mutations, except at root (default false). As a result, all gene 
     trees will coalesce in the root only, and never in any of the branches. This option is allows you to emulate the model used by \citet{nielsen1998} and \citet{roychoudhury2008}.
-    
-    The ``Show Pattern Likelihoods And Quit'' checkbox is handy if you just want to print out the likelihoods for all patterns in the starting state and then quit.
-    
+        
     The ``Use Log Likelihood Correction'' checkbox is for calculating corrected likelihood values for Bayes factor test of different species assignments (the calculation is almost instantaneous, and it will not slow down your analysis).
     
     When the ``Use beta root prior'' checkbox is checked, instead of using a uniform prior for allele frequencies at the root, a beta root prior is used.
@@ -198,7 +196,7 @@ The default priors are
 
 The prior on {$\lambda$} seems non-informative allowing the data to drive the analysis instead of prior information. However, for estimating the marginal likelihood using path sampling (see Step 11), ``proper'' priors are required. A proper prior is a prior that when integrating over its range sums to 1. Since the uniform prior has infinite bounds, the integral over the range does not do that. The prior can be made proper by defining finite upper and lower bounds.\footnote{The 1/X prior is another prior that is not proper and therefore not recommended.}
 
-\textit{Setting the speciation rate prior Lambda:} \program{SNAPPER} by default uses a Yule prior for the species tree and branch lengths on the species tree. This prior has a single parameter, {$\lambda$} (Lambda), representing the speciation rate. This rate, in turn, determines the (prior) expected height of the species tree. The higher the speciation rate, the higher the probability of supporting more species during species delimitation. The trees that come out of SNAPPER are not time calibrated. The branch lengths should be interpreted in units of expected substitutions per site. Translating this into time requires an assumption about the substitution rate. Two different options for setting lambda are compared in this tutorial: using a fixed value versus assigning a broad prior. In general, tree height estimates are similar using either a fixed lambda (lambda = 5) or a gamma distribution (2, 2), as shown below. The mean of the gamma distribution for Lambda is calculated as alpha*beta rather than alpha/beta as it is for theta. 
+\textit{Setting the speciation rate prior Lambda:} \program{SNAPPER} by default uses a Yule prior for the species tree and branch lengths on the species tree. This prior has a single parameter, {$\lambda$} (Lambda), representing the speciation rate. This rate, in turn, determines the (prior) expected height of the species tree. The higher the speciation rate, the higher the probability of supporting more species during species delimitation. The trees that come out of SNAPPER are not time calibrated. The branch lengths should be interpreted in units of expected substitutions per site. Translating this into time requires an assumption about the substitution rate. Two different options for setting lambda are compared in this tutorial: using a fixed value versus assigning a broad prior. In general, tree height estimates are similar using either a fixed lambda (lambda = 5) or a gamma distribution (2, 2), as shown below. The mean of the gamma distribution for Lambda is calculated as alpha*beta when mode is 'ShapeScale' (rather than alpha/beta when mode='ShapeRate'). 
 
      \begin{figure}[htbp]
         \centering
@@ -294,12 +292,12 @@ You can select different distributions for the theta prior by clicking the drop 
 \step{Setting up for marginal likelihood estimation.}{
 There are two ways to set up the stepping stone analysis; through a GUI, and by editing the XML. The GUI is more convenient but makes it a bit harder to transfer the analysis to a cluster, and since stepping stone analyses are typically very computational intensive, it often makes sense to run them on a cluster. In this step, we explain how to set up the analysis using the GUI, and in the next two steps it is explained how to set up an XML file through a text editor.
 
-First, start the BEAST app-store by selecting the File/Launch apps menu in BEAUti (alternatively, double click the AppStore icon in the BEAST folder). A window similar to Figure~\ref{fig:appstore} should pop up.
+First, start the BEAST app-store by selecting the File/Launch apps menu in BEAUti (alternatively, double click the AppLauncher icon in the BEAST folder). A window similar to Figure~\ref{fig:appstore} should pop up.
 
     \begin{figure}[htbp]
         \centering
         {\includegraphics[width=0.6\textwidth]{../../BFD*/screenshots/appstore}}
-        \caption{BEAST app store.}
+        \caption{BEAST app launcher.}
         \label{fig:appstore}
     \end{figure}
 
@@ -307,7 +305,7 @@ Select the Path sampler icon, and hit the Launch button. A new window pops up wi
 
 If you prefer to start from the command line, you can use the following in a terminal:
 
-    	    \cmd{/path/to/BEASTv2.6.4/bin/appstore PathSampler}
+    	    \cmd{/path/to/BEASTv2.6.4/bin/applauncher PathSampler}
 
 Select the file with MCMC analysis you just set up in BEAUti, and change the settings as indicated in Figure~\ref{fig:pathsampler}.
 
